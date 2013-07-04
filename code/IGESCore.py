@@ -2,55 +2,130 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sat Mar 30 15:00:26 2013
-@author: Rod Persky <rodney.persky@gmail.com
+@author: Rod Persky
 @license: Licensed under the Academic Free License ("AFL") v. 3.0
 """
 
-import time as Time
-import pyximport; pyximport.install()
-import IGESCompile
-from IGESOptions import IGESModelUnits
 
-class IGESPointer:
-    def __init__(self):  self.data = 0
-    def __str__(self): return str(self.data)
-    def __add__(self, other): return self.data + 1  # Only use when printing
+from IGES.IGESOptions import (IGESModelUnits,
+                              IGESEntityTypeNumber,
+                              IGESStatusNumber,
+                              IGESColorNumber,
+                              IGESLineFontPattern,
+                              IGESPointer,
+                              IGESDateTime)
 
-class IGESDateTime:
-    def __init__(self): self.time = Time.strftime('%Y%m%d.%H%M%S')  # 2.2.4.3.18
-    def __str__(self): return self.time
+import IGES.IGESCompile as IGESCompile
+
 
 class IGESectionFunctions:
     def __init__(self):
         self._data = list()
         self._linecount = 1
 
+    def getNewPointer(self):
+        return IGESPointer(self._linecount)
+
     def __str__(self):
         return IGESCompile.Join(self._data, self.LetterCode)
 
-    # ToDo: Consider not splitting the lines back into an array and use
-    #       the linecount returned from the IGESCompile.IGESUnaligned
     def AddLines(self, lines):
-        lines = lines.split("\n")
+        self._linecount = self._linecount + len(lines)
         self._data.extend(lines)
-        # self._linecount = len(self._data)+1
-        # self._linecount += len(lines)
 
-    def ToIGES(self):
-        raise DeprecationWarning("ToIGES now depreciated")
+
+class IGESParameterEntry:
+    def __init__(self):
+        pass
+
+
+class IGESItemData:
+    """IGES Item Data
+
+    When adding to IGES File,
+    1) Get DirectoryDataPointer
+    2) Compile ParameterData (which relies on the DirectoryDataPointer)
+    3) Update ParameterLineCount
+    4) get ParameterDataPointer
+    5) compile directory data (which relies on ParameterLineCount and ParameterDataPointer)
+    """
+    def __init__(self):
+        #Pointers and data that needs updating
+        self.DirectoryDataPointer = IGESPointer()       # Pointer,           First line of Directory Data
+        self.ParameterDataPointer = IGESPointer()       # Pointer,           First line of Parameter Data
+        self.ParameterLineCount = int(0)                # Integer,           2.2.4.4.14 Relies on knowing how many parameter lines are in object definition
+
+        #IGES parameter data information
+        self.ParameterData = list()
+
+        # IGES directory data information See 2.2.4.4
+        self.EntityType = IGESEntityTypeNumber()        # Integer,           Table 3 Page 38
+        self.Structure = int(0)                         # Integer/Pointer,   2.2.4.4.3 Not using macro instance
+        self.LineFontPattern = IGESLineFontPattern()    # Integer/Pointer,   2.2.4.4.4 table
+        self.Level = int(0)                             # Integer/Pointer,   2.2.4.4.5 ???
+        self.View = int(0)                              # Null/Pointer,      2.2.4.4.6 Visable in all views
+        self.TransfrmMat = int(0)                       # Null/Pointer,      2.2.4.4.7 0=no transform -> see #4.21
+        self.LabelDispAssoc = int(0)                    # Null/Pointer,      2.2.4.4.8 default
+        self.StatusNumber = IGESStatusNumber()          # Integer,           2.2.4.4.9
+        self.LineWeightNum = int(0)                     # Integer,           2.2.4.4.12 use default of reciever
+        self.Color = IGESColorNumber()                  # Integer/Pointer,   2.2.4.4.13
+        self.FormNumber = int(0)                        # Integer,           2.2.4.4.15 default
+        self.EntityLabel = ""                           # String,            2.2.4.4.18 Object Name
+        self.EntitySubScript = ""
+
+        #Compiled items
+        self.CompiledDirectory = list()
+        self.CompiledParameter = list()
+
+    def AddParameters(self, data):
+        self.ParameterData.extend(data)
+
+    def CompileDirectory(self):
+        items = [str(self.EntityType),                   # Item 1
+                 self.ParameterDataPointer,              # Item 2
+                 self.Structure,                         # Item 3
+                 str(self.LineFontPattern),              # Item 4
+                 self.Level,                             # Item 5
+                 self.View,                              # Item 6
+                 self.TransfrmMat,                       # Item 7
+                 self.LabelDispAssoc,                    # Item 8
+                 str(self.StatusNumber),                 # Item 9
+                 self.LineWeightNum,                     # Item 12
+                 self.Color.getValue(),                  # Item 13
+                 self.ParameterLineCount,                # Item 14
+                 self.FormNumber,                        # Item 15
+                 "", "",                                 # Item 16, 17 Reserved
+                 self.EntityLabel[:8],                   # Item 18
+                 self.EntitySubScript]                   # Item 19
+
+        Line1Template = "{p[0]:>8}{p[1]:>8}{p[2]:>8}{p[3]:>8}{p[4]:>8}{p[5]:>8}{p[6]:>8}{p[7]:>8}{p[8]:>8}"
+        Line2Template = "{p[0]:>8}{p[9]:>8}{p[10]:>8}{p[11]:>8}{p[12]:>8}{p[13]:>8}{p[14]:>8}{p[15]:>8}{p[16]:>8}"
+
+        self.CompiledDirectory = [Line1Template.format(p=items)]
+        self.CompiledDirectory.append(Line2Template.format(p=items))
+
+        return self.CompiledDirectory
+
+    def CompileParameters(self, IGESGlobal):
+        #IGESGlobal is required because we need IGESGlobal.ParameterDelimiterCharacter
+        cdata = [self.EntityType.value]
+        cdata.extend(self.ParameterData[:])
+        cdata.extend([0, 0])
+        self.CompiledParameter, self.ParameterLineCount = IGESCompile.IGESUnaligned(cdata, IGESGlobal, 'P', self.DirectoryDataPointer.data)
+        return self.CompiledParameter
 
 
 class IGEStart(IGESectionFunctions):
     Template = "{0}{1:72}S{2:7}"
     LetterCode = "S"
+
     def __init__(self):
         IGESectionFunctions.__init__(self)
         self.Prolog = [
         "|--------------3D PARAMETRIC TURBINE GEN TOOL--------------------------",
-        "|................ Writen By, Rodney Persky.............................",
+        "|................ Written By, Rodney Persky............................",
         "|............WARNING, CONFIG FILE FAILED TO LOAD.......................",
         "|............BEWARE: UNITS WILL NOT BE CORRECT AT ALL.................."]
-
 
     def __str__(self):
         out = ""
@@ -62,6 +137,8 @@ class IGEStart(IGESectionFunctions):
 
 class IGESGlobal(IGESDateTime, IGESModelUnits, IGESectionFunctions):
     LetterCode = "G"
+    LineLength = 65
+
     def __init__(self):  # 2.2.4.3
         IGESectionFunctions.__init__(self)
         self.ParameterDelimiterCharacter = ","  # 1, String
@@ -103,18 +180,20 @@ class IGESGlobal(IGESDateTime, IGESModelUnits, IGESectionFunctions):
 
     def __str__(self):
         self._data = []
-        self.AddLines(IGESCompile.IGESUnaligned(self.GetItems(), self, self.LetterCode, 0, 72)[0])
+        self.AddLines(IGESCompile.IGESUnaligned(self.GetItems(), self, self.LetterCode, 0)[0])
         return IGESectionFunctions.__str__(self)
 
 
 class IGESDirectory(IGESectionFunctions):
     LetterCode = "D"
+
     def __init__(self):
         IGESectionFunctions.__init__(self)
 
 
 class IGESParameter(IGESectionFunctions):
     LetterCode = "P"
+
     def __init__(self):
         IGESectionFunctions.__init__(self)
 
@@ -124,26 +203,28 @@ class IGESTerminate:
         return "S{:7}G{:7}D{:7}P{:7}{:>41}{:7}".format(
                                             len(self.StartSection._data) + 1,
                                             len(self.GlobalSection._data),
-                                            len(self.DirectorySection._data),
-                                            len(self.ParameterSection._data),
+                                            len("Directory"),
+                                            len("Parameter"),
                                             "T", 1)
+
 
 class IGEStorage(IGESTerminate):
     """IGES Storage"""
-
     def __init__(self):  # Wrap core functions
         self.StartSection = IGEStart()
-        self.GlobalSection = IGESGlobal()
         self.DirectorySection = IGESDirectory()
         self.ParameterSection = IGESParameter()
+        self.GlobalSection = IGESGlobal()
 
-    def Commit(self, object):
-        # Step 1, Update/get pointer from storage
-        # Step 2, Commit rendered object to storage
-        object.ParameterDataPointer.data = len(self.ParameterSection._data) + 1
-        object.DirectoryDataPointer.data = len(self.DirectorySection._data) + 1
-        self.ParameterSection.AddLines(object.Parameters(self.GlobalSection))
-        self.DirectorySection.AddLines(object.Directory())
+    def Commit(self, IGESObject):
+
+        IGESObject.DirectoryDataPointer = self.DirectorySection.getNewPointer()
+        IGESObject.CompileParameters(self.GlobalSection)
+        IGESObject.ParameterDataPointer = self.ParameterSection.getNewPointer()
+        IGESObject.CompileDirectory()
+
+        self.ParameterSection.AddLines(IGESObject.CompiledParameter)
+        self.DirectorySection.AddLines(IGESObject.CompiledDirectory)
 
     def save(self, filename='IGESFile.igs'):
         try:
@@ -156,11 +237,12 @@ class IGEStorage(IGESTerminate):
 
     def __str__(self):
         out = str(self.StartSection)
-        out = "".join((out, str(self.GlobalSection)))
-        out = "".join((out, str(self.DirectorySection)))
-        out = "".join((out, str(self.ParameterSection), "\n"))
-        out = "".join((out, self.IGESTerminate()))
+        out = "".join([out, str(self.GlobalSection), ""])
+        out = "".join([out, str(self.DirectorySection), ""])
+        out = "".join([out, str(self.ParameterSection), "\n"])
+        out = "".join([out, self.IGESTerminate()])
         return out
 
-
-
+if __name__ == "__main__":
+    import IGESTest
+    IGESTest.testrun()

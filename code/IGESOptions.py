@@ -1,10 +1,25 @@
 #!python3.3
 # -*- coding: utf-8 -*-
+#@PydevCodeAnalysisIgnore
 """
 Created on Tue Apr  2 18:07:29 2013
-@author: Rod Persky <rodney.persky@gmail.com
+@author: Rod Persky
 @license: Licensed under the Academic Free License ("AFL") v. 3.0
 """
+
+
+from time import strftime
+
+
+class IGESPointer:
+    def __init__(self, line=0):  self.data = line
+    def __str__(self): return str(self.data)
+
+
+class IGESDateTime:
+    def __init__(self): self.time = strftime('%Y%m%d.%H%M%S')  # 2.2.4.3.18
+    def __str__(self): return self.time
+
 
 class IGESModelUnits:
     # This is used in two contexts, 2.2.4.3.14 and 2.2.4.3.15

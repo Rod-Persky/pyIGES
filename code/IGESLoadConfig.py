@@ -2,9 +2,10 @@
 # -*- coding: utf-8 -*-
 """
 Created on Tue Apr  2 18:06:24 2013
-@author: Rod Persky <rodney.persky@gmail.com
+@author: Rod Persky
 @license: Licensed under the Academic Free License ("AFL") v. 3.0
 """
+
 
 def IGESTreeWalk(object, level=0, levelname=""):
     """Walk IGES Class Tree"""
@@ -17,6 +18,7 @@ def IGESTreeWalk(object, level=0, levelname=""):
         elif "_" not in item:
             branch.append("".join((levelname, item)))
     return branch
+
 
 def IGESetKey(object, key, value):  # Otherwise known as reverse tree walk
     IGESKey = key.split(".")
@@ -39,11 +41,13 @@ def IGESetKey(object, key, value):  # Otherwise known as reverse tree walk
                                             ["| Last Revised $Date$"],
                                             ["| Last HEAD $Rev$"],
                                             ["| Last $Author$"], ["|"]])
-                        else: IGESItem.append([line])
+                        else:
+                            IGESItem.append([line])
                     object.__dict__[IGESKey[0]] = IGESItem
                 elif type(object.__dict__[IGESKey[0]]) == str:
                     object.__dict__[IGESKey[0]] = value
-                elif 8 < len(value): raise ResourceWarning(''.join((key, " (", value, ") cannot have a length longer than 8 characters")))
+                elif 8 < len(value):
+                    raise ResourceWarning(''.join((key, " (", value, ") cannot have a length longer than 8 characters")))
                 elif type(object.__dict__[IGESKey[0]]) == int:
                     object.__dict__[IGESKey[0]] = int(value)  # We assume that the hard coded types are correct!
                 elif type(object.__dict__[IGESKey[0]]) == float:
@@ -53,6 +57,7 @@ def IGESetKey(object, key, value):  # Otherwise known as reverse tree walk
                                                        str(type(object.__dict__[IGESKey[0]])))))
         except:
             raise ValueError("Traceback to value:", key)
+
 
 def IGESConfigFromFile(object, filename='IGESUserSettings.ini'):
     """Configure IGES settings from a file"""
@@ -65,7 +70,8 @@ def IGESConfigFromFile(object, filename='IGESUserSettings.ini'):
 
     for IGESitem in IGESTree:
         section = IGESitem.split(".")
-        if len(section) < 2: raise NotImplementedError("TODO: Fix for single value items")
+        if len(section) < 2:
+            raise NotImplementedError("TODO: Fix for single value items")
         keyLen = len(section) - 1
         if section[keyLen - 1] in config.sections():
             if section[keyLen] in config[section[keyLen - 1]]:
@@ -74,4 +80,3 @@ def IGESConfigFromFile(object, filename='IGESUserSettings.ini'):
         #        print("{} not in {}".format(section[keyLen],config[section[keyLen-1]]))
         # else:
         #    print("{} not in {}".format(section[keyLen-1],config.sections()))
-
