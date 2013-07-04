@@ -1,19 +1,20 @@
+#!python3.3
 # -*- coding: utf-8 -*-
 """
 Created on Tue Apr  2 18:07:29 2013
-@author: Rod Persky
-Licensed under the Academic Free License ("AFL") v. 3.0
+@author: Rod Persky <rodney.persky@gmail.com
+@license: Licensed under the Academic Free License ("AFL") v. 3.0
 """
 
 class IGESModelUnits:
     # This is used in two contexts, 2.2.4.3.14 and 2.2.4.3.15
-    def __init__(self):       self.setMillimeters() #Default
-    def setInches(self):      self.UnitsFlag, self.UnitsName =  1, "IN"
-    def setMillimeters(self): self.UnitsFlag, self.UnitsName =  2, "MM"
-    def setMils(self):        self.UnitsFlag, self.UnitsName =  8, "MIL"
-    def setMicrons(self):     self.UnitsFlag, self.UnitsName =  9, "UM"
+    def __init__(self):       self.setMillimeters()  # Default
+    def setInches(self):      self.UnitsFlag, self.UnitsName = 1, "IN"
+    def setMillimeters(self): self.UnitsFlag, self.UnitsName = 2, "MM"
+    def setMils(self):        self.UnitsFlag, self.UnitsName = 8, "MIL"
+    def setMicrons(self):     self.UnitsFlag, self.UnitsName = 9, "UM"
     def setCentimeters(self): self.UnitsFlag, self.UnitsName = 10, "CM"
-    
+
 class IGESParameter:
     def __init__(self): self.value = 0
     def __str__(self): return str(self.value)
@@ -46,6 +47,8 @@ class IGESEntityTypeNumber(IGESParameter):
     def setCurveOnParaSurface(self):   self.value = 142
     def setBoundedSurface(self):       self.value = 143
     def setTrimmedParaSurface(self):   self.value = 144
+    def setSphere(self):               self.value = 158
+    def setTorus(self):                self.value = 160
     def setPlaneSurface(self):         self.value = 190
     def setRightCircCylSurf(self):     self.value = 192
     def setRightCircConSurf(self):     self.value = 194

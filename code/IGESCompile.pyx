@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+
 """
 Created on Fri Mar 29 14:58:02 2013
 @author: Rod Persky
@@ -13,9 +13,9 @@ import numpy as np
 class Lines:
     def __init__(self, int nlines, int linelength, str section, int pointer):
         self.lines = np.empty(nlines, dtype=np.dtype("object"))
-        self.nline, self.linelength, self.section, self.pointer  = 0, linelength, section, pointer
+        self.nline, self.linelength, self.section, self.pointer = 0, linelength, section, pointer
 
-    def Store(self, str thisline, int retry = 0):
+    def Store(self, str thisline, int retry=0):
         try:
             if self.section == "P":
                 thisline = "{:<{linelength}}{pointer:>7}".format(thisline, linelength=self.linelength, pointer=self.pointer)
@@ -23,12 +23,12 @@ class Lines:
             self.nline = self.nline + 1
         except IndexError:
             try:
-                self.lines.resize((self.nline+5,1))
+                self.lines.resize((self.nline + 5, 1))
             except ValueError:
                 raise ValueError("Estimated storage size too small, resize failed")
 
             print "Length guess incorrect, adding length"
-            self.Store(thisline,retry+1)
+            self.Store(thisline, retry + 1)
 
     def ReadStore(self):
         return self.lines[:self.nline].tolist()
@@ -46,7 +46,7 @@ cpdef str Join(list data, str section):
     cdef str out = ""
 
     for i from 0 <= i < len(data):
-        out = "{}{}{:<72}{}{:7}".format(out,"\n",data[i],section,i+1)
+        out = "{}{}{:<72}{}{:7}".format(out, "\n", data[i], section, i + 1)
 
     return out
 
@@ -65,7 +65,6 @@ cpdef IGESUnaligned(list data, object IGESGlobal, str section, int DirectoryPoin
     if len(data) == 0:
         raise ValueError("Parameter data is 0 length")
 
-
     for i from 0 <= i < len(data):
         if type(data[i]) == str:
             Param = "{}H{}".format(len(data[i]),data[i])
@@ -76,19 +75,18 @@ cpdef IGESUnaligned(list data, object IGESGlobal, str section, int DirectoryPoin
         else:
             raise NotImplementedError("Unable to convert type ",type(data[i]))
 
-
         if i == 0:
             Line = Param
         else:
-            if len(Line)+len(Param)+1 < linelength:
+            if len(Line) + len(Param) + 1 < linelength:
                 Line = "{0}{delim}{1}".format(Line, Param, delim=IGESGlobal.ParameterDelimiterCharacter)
-            elif len(Param) < linelength-5:
+            elif len(Param) < linelength - 5:
                 Line = "{0}{delim}".format(Line, delim=IGESGlobal.ParameterDelimiterCharacter)
 
                 LineStore.Store(Line)
                 Line = Param
             else:
-                raise NotImplementedError("Character by character wrapping not implimented, you must shorten",Param)
+                raise NotImplementedError("Character by character wrapping not implimented, you must shorten", Param)
 
     Line = "{0}{recend}".format(Line, recend=IGESGlobal.RecordDelimiter)
     LineStore.Store(Line)
