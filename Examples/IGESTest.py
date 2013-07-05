@@ -6,15 +6,15 @@ Created on Tue Apr  2 18:33:27 2013
 @license: Licensed under the Academic Free License ("AFL") v. 3.0
 """
 
-from IGES.IGESCore import IGEStorage
-from IGES.IGESGeomLib import IGESPoint
-from scipy.misc import comb
-import IGES.IGESGeomLib as IGES
-import numpy as np
 import os
 import sys
-sys.path.append('IGES')
-#random.seed()
+import numpy as np
+from scipy.misc import comb
+
+sys.path.append('../')
+from IGES.IGESCore import IGEStorage
+from IGES.IGESGeomLib import IGESPoint
+import IGES.IGESGeomLib as IGES
 
 
 def bernstein_poly(n, i, u):
