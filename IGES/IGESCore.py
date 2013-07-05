@@ -203,8 +203,8 @@ class IGESTerminate:
         return "S{:7}G{:7}D{:7}P{:7}{:>41}{:7}".format(
                                             len(self.StartSection._data) + 1,
                                             len(self.GlobalSection._data),
-                                            len("Directory"),
-                                            len("Parameter"),
+                                            self.DirectorySection._linecount,
+                                            self.ParameterSection._linecount,
                                             "T", 1)
 
 

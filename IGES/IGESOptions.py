@@ -51,7 +51,7 @@ class IGESEntityTypeNumber(IGESParameter):
     def setPoint(self):                self.value = 116
     def setRuledSurface(self):         self.value = 118
     def setRevolvedSurface(self):      self.value = 120
-    def setTabCylinder(self):          self.value = 122
+    def setTabulatedCylinder(self):    self.value = 122
     def setTransformMatrix(self):      self.value = 124
     def setFlash(self):                self.value = 125
     def setRBSplineCurve(self):        self.value = 126

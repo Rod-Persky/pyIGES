@@ -16,6 +16,13 @@ class IGESPoint:
         self.y = y
         self.z = z
 
+class IGESExtrude(IGESItemData): #122
+    def __init__(self, ParentDEPointer, L):
+        IGESItemData.__init__(self)
+        self.EntityType.setTabulatedCylinder()
+
+        self.AddParameters([ParentDEPointer, L.x, L.y, L.z])
+
 
 class IGESGeomLine(IGESItemData):  # 116
     def __init__(self, startpoint, endpoint):

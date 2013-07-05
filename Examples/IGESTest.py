@@ -66,12 +66,13 @@ def testrun():
 
     polyln = IGES.IGESGeomPolyline()
 
-    for n in range(0, 70):
+    for n in range(0, 10):
         for i in range(0, len(bezi[0])):
             polyln.AddPoint(IGESPoint(bezi[0][i], bezi[1][i]))
         bezi[0] = bezi[0] + 4
 
     system.Commit(polyln)
+    system.Commit(IGES.IGESExtrude(polyln.DirectoryDataPointer.data, IGESPoint(0,0,10)))
     system.save()
     os.startfile("IGESFile.igs")
 
