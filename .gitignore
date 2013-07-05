@@ -1,4 +1,5 @@
 *.py[cod]
+*.igs
 
 # C extensions
 *.so
