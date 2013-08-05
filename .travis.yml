@@ -4,7 +4,7 @@ python:
   - 3.2
   - 3.3
 
- install: "sudo apt-get -qq install python3-numpy python3-scipy"
+install: "sudo apt-get -qq install python3-numpy python3-scipy"
   
 script:
   - python setup.py clean
