@@ -1,13 +1,23 @@
 #!python3.3
 # -*- coding: utf-8 -*-
 """
-Created on Sun Mar 31 16:57:00 2013
-@author: Rod Persky
-@license: Licensed under the Academic Free License ("AFL") v. 3.0
+.. module:: IGES.IGESGeomLib
+   :platform: Agnostic, Windows
+   :synopsis: Main GUI program
+
+.. requires numpy
+
+.. Created on Sun Mar 31 16:57:00 2013
+.. codeauthor::  Rod Persky <rodney.persky {removethis} AT gmail _DOT_ com>
+.. Licensed under the Academic Free License ("AFL") v. 3.0
+.. Source at https://github.com/Rod-Persky/pyIGES
 """
 
-from IGES.IGESCore import IGESItemData
+# External Libraries / Modules
 import numpy as np
+
+# Internal Modules
+from IGES.IGESCore import IGESItemData
 
 
 class IGESPoint:
@@ -16,24 +26,42 @@ class IGESPoint:
         self.y = y
         self.z = z
 
-class IGESExtrude(IGESItemData): #122
-    def __init__(self, ParentDEPointer, L):
+
+class IGESExtrude(IGESItemData):  #122
+    def __init__(self, IGESObject, Length):
         IGESItemData.__init__(self)
         self.EntityType.setTabulatedCylinder()
+        
+        if type(IGESObject) == int:
+            raise DeprecationWarning("IGESExtrude now uses the IGESObject directly!")
+        
+        # Page 140 "Coordinates of the terminate point"!
+        # Given we have the data at this point,
+        #  we can just extract the startpoint
+        startpoint = IGESObject.ParameterData[2:5]
+        
 
-        self.AddParameters([ParentDEPointer, L.x, L.y, L.z])
+
+        self.AddParameters([IGESObject.DirectoryDataPointer.data,
+                            startpoint[0] + Length.x,
+                            startpoint[1] + Length.y,
+                            startpoint[2] + Length.z])
+
+
+class IGESRevolve(IGESItemData):  # 120
+    def __init__(self, profile, center_line, start_angle=0, terminate_angle=np.pi*2):
+        IGESItemData.__init__(self)
+        self.EntityType.setRevolvedSurface()
+
+        self.AddParameters([center_line.DirectoryDataPointer.data,
+                            profile.DirectoryDataPointer.data,
+                            start_angle,
+                            terminate_angle])
 
 
 class IGESGeomLine(IGESItemData):  # 116
     def __init__(self, startpoint, endpoint):
         IGESItemData.__init__(self)
-
-        self.LineFontPattern.setDashed()
-        self.Color.setBlue()
-        self.StatusNumber.Hierachy.setGlobalDifer()
-        self.LineWeightNum = 1
-        self.ParameterLC = 1
-
         self.EntityType.setLine()
 
         self.AddParameters([startpoint.x, startpoint.y, startpoint.z,
@@ -102,7 +130,7 @@ class IGESGeomSphere(IGESItemData):
 class IGESGeomPolyline(IGESItemData):
     """IGES Simple Closed Planar Curve Entity (Type 106, Form 63)
        Page 86"""
-    def __init__(self):
+    def __init__(self, *args):
         IGESItemData.__init__(self)
         self.LineFontPattern.setSolid()
         self.LineWeightNum = 1
@@ -113,6 +141,9 @@ class IGESGeomPolyline(IGESItemData):
 
         self.pointcount = 0
         self.AddParameters([2, self.pointcount])
+        
+        for IGESPoint in args:
+            self.AddPoint(IGESPoint)
 
     def AddPoint(self, point):
         self.AddParameters([point.x, point.y, point.z])
@@ -120,13 +151,165 @@ class IGESGeomPolyline(IGESItemData):
         self.ParameterData[1] = self.pointcount
 
 
+class IGESGeomCompositeCurve(IGESItemData):  #102
+    def __init__(self, *args):
+        IGESItemData.__init__(self)
+        self.EntityType.setCompositeCurve()
+        self.FormNumber = 0
+        
+        self.object_count = 0
+        self.AddParameters(self.object_count)
+        
+        for IGESObject in args:
+            self.AddObject(IGESObject)
+    
+    def AddObject(self, IGESObject):
+        self.object_count = self.object_count + 1
+        self.AddParameters(IGESObject.DirectoryDataPointer.data)
+        self.ParameterData[1] = self.object_count
+        
+
+class IGESGeomPlaneaaaa(IGESItemData):
+    def __init__(self):
+        IGESItemData.__init__(self)
+        self.EntityType.setClosedPlanarCurve()
+        self.FormNumber = 63
+        
+        self.AddParameters([2])  # Page 115, x, y, z
+        
+        self.pointcount = 0
+        self.AddParameters([self.pointcount])
+        
+        self.AddParameters([0])
+        
+    def AddPoint(self, *args):
+        """Add surface bounding point
+        *args is IGESPoint"""
+        
+        for IGESPoint in args:
+            self.AddParameters([IGESPoint.x, IGESPoint.y, IGESPoint.z])
+            self.pointcount = self.pointcount + 1
+            self.ParameterData[1] = self.pointcount
+
+
+class IGESGeomPlane(IGESItemData):
+    def __init__(self, bounding_profile):
+        IGESItemData.__init__(self)
+        self.EntityType.setPlane()
+        self.FormNumber = 1
+        
+        self.coefficients = [0, 0, 1, 0]
+        self.AddParameters(self.coefficients)
+        self.AddParameters([bounding_profile.DirectoryDataPointer.data])
+        self.AddParameters([0, 0])
+        
+    def setRemove(self):
+        self.FormNumber = -1
+    
+
+class IGESGeomIntersectionSurfaces(IGESItemData):  # Page 193
+    def __init__(self, IGESSurfaceS, IGESSurfaceB, IGESSurfaceC):
+        IGESItemData.__init__(self)
+        self.EntityType.setCurveOnParaSurface()
+        self.FormNumber = 0
+        
+        self.crtn = 2  # intersection of two surfaces
+        self.AddParameters([self.crtn,
+                            IGESSurfaceS.DirectoryDataPointer.data,
+                            IGESSurfaceB.DirectoryDataPointer.data,
+                            IGESSurfaceC.DirectoryDataPointer.data])
+        self.AddParameters([2])  # C is preferred
+        
+        
+
+class IGESGeomTrimSurface(IGESItemData):
+    def __init__(self, first_surface, *IGESClosedProfile):
+        IGESItemData.__init__(self)
+        self.EntityType.setBoundedSurface()
+        self.FormNumber = 0
+        
+        self.type = 1
+        self.sptr = first_surface.DirectoryDataPointer.data
+        self.count_boundaries = 0
+        
+        self.AddParameters([self.type, self.sptr, self.count_boundaries])
+        
+        for profile in IGESClosedProfile:
+            self.add_bounding_profile(profile)
+            
+    def add_bounding_profile(self, IGESClosedProfile):
+        self.AddParameters([IGESClosedProfile.DirectoryDataPointer.data])
+        self.count_boundaries = self.count_boundaries + 1
+        self.ParameterData[2] = self.count_boundaries
+        
+            
+
 class IGESGeomPoint(IGESItemData):
     def __init__(self, node):
         IGESItemData.__init__(self)
+        self.EntityType.setPoint()
         self.LineFontPattern.setSolid()
         self.LineWeightNum = 1
         self.ParameterLC = 1
 
-        self.EntityType.setPoint()
-
         self.AddParameters([node.x, node.y, node.z, 0])
+
+
+class IGESGeomTransform(IGESItemData):
+    """ Transform / Move Geometry
+    [XX, XY, XZ,
+     XY, YY, YZ,
+     XZ, YZ, ZZ]"""
+     
+    def __init__(self, transform_matrix):
+        IGESItemData.__init__(self)
+        self.EntityType.setTransformMatrix()
+        self.FormNumber = 0
+        
+        if len(transform_matrix) == 9:
+            self.AddParameters(transform_matrix)
+        else:
+            raise TypeError("A transform matrix is 9 numbers")
+        
+        
+class IGESCircularArray(IGESItemData):
+    def __init__(self, geometry, number, center,
+                 radius, start_angle, delta_angle):
+        IGESItemData.__init__(self)
+        self.EntityType.setCircularArray()
+        self.FormNumber = 0
+        
+        self.add_extended_data = False
+        
+        self.AddParameters([geometry.DirectoryDataPointer.data])
+        self.AddParameters([number])
+        self.AddParameters([center.x, center.y, center.z])
+        self.AddParameters([radius])
+        self.AddParameters([start_angle, delta_angle])
+        self.AddParameters([0])
+        
+        
+class IGESGroup(IGESItemData):
+    def __init__(self, name, *IGESObjects):
+        IGESItemData.__init__(self)
+        self.EntityType.setSubfigureInstance()
+        
+        self.FormNumber = 0
+        self.StatusNumber.EntityUseFlag.setDefinition()
+        self.StatusNumber.Hierachy.setGlobalDefer()
+        
+        self.AddParameters([0])
+        self.AddParameters([name])
+        self.entities_count = 0
+        self.AddParameters(self.entities_count)
+
+        self.add_extended_data = False
+        
+        for IGESObject in IGESObjects:
+            self.AddObject(IGESObject)
+            
+    def AddObject(self, *IGESObjects):
+        for IGESObject in IGESObjects:
+            self.AddParameters([IGESObject.DirectoryDataPointer.data])
+            self.entities_count = self.entities_count + 1
+            self.ParameterData[2] = self.entities_count

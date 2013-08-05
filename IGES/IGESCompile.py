@@ -1,11 +1,19 @@
 #!python3.3
 # -*- coding: utf-8 -*-
 """
-Created on Fri Mar 29 14:58:02 2013
-@author: Rod Persky
-Licensed under the Academic Free License ("AFL") v. 3.0
+.. module:: IGES.IGESCompile
+   :platform: Agnostic, Windows
+   :synopsis: Main GUI program
+
+.. requires numpy
+
+.. Created on Fri Mar 29 14:58:02 2013
+.. codeauthor::  Rod Persky <rodney.persky {removethis} AT gmail _DOT_ com>
+.. Licensed under the Academic Free License ("AFL") v. 3.0
+.. Source at https://github.com/Rod-Persky/pyIGES
 """
 
+# External Libraries / Modules
 import numpy
 
 

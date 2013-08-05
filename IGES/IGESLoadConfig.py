@@ -1,9 +1,14 @@
 #!python3.3
 # -*- coding: utf-8 -*-
 """
-Created on Tue Apr  2 18:06:24 2013
-@author: Rod Persky
-@license: Licensed under the Academic Free License ("AFL") v. 3.0
+.. module:: IGES.IGESLoadConfig
+   :platform: Agnostic, Windows
+   :synopsis: Main GUI program
+
+.. Created on Tue Apr  2 18:06:24 2013
+.. codeauthor::  Rod Persky <rodney.persky@gmail.com>
+.. Licensed under the Academic Free License ("AFL") v. 3.0
+.. Source at https://github.com/Rod-Persky/pyIGES
 """
 
 

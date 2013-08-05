@@ -1,9 +1,16 @@
 #!python3.3
 # -*- coding: utf-8 -*-
 """
-Created on Sat Mar 30 15:00:26 2013
-@author: Rod Persky
-@license: Licensed under the Academic Free License ("AFL") v. 3.0
+.. module:: IGES.IGESCore
+   :platform: Agnostic, Windows
+   :synopsis: Main GUI program
+
+
+.. Created on Sat Mar 30 15:00:26 2013
+.. codeauthor::  Rod Persky <rodney.persky {removethis} AT gmail _DOT_ com>
+.. Licensed under the Academic Free License ("AFL") v. 3.0
+.. Source at https://github.com/Rod-Persky/pyIGES
+
 """
 
 
@@ -72,13 +79,18 @@ class IGESItemData:
         self.FormNumber = int(0)                        # Integer,           2.2.4.4.15 default
         self.EntityLabel = ""                           # String,            2.2.4.4.18 Object Name
         self.EntitySubScript = ""
+        
+        self.add_extended_data = False                   # Some items seem to needs this whilst other do not
 
         #Compiled items
         self.CompiledDirectory = list()
         self.CompiledParameter = list()
 
     def AddParameters(self, data):
-        self.ParameterData.extend(data)
+        try:
+            self.ParameterData.extend(data)
+        except TypeError:
+            self.ParameterData.extend([data])
 
     def CompileDirectory(self):
         items = [str(self.EntityType),                   # Item 1
@@ -110,7 +122,10 @@ class IGESItemData:
         #IGESGlobal is required because we need IGESGlobal.ParameterDelimiterCharacter
         cdata = [self.EntityType.value]
         cdata.extend(self.ParameterData[:])
-        cdata.extend([0, 0])
+        
+        if self.add_extended_data:
+            cdata.extend([0, 0])
+            
         self.CompiledParameter, self.ParameterLineCount = IGESCompile.IGESUnaligned(cdata, IGESGlobal, 'P', self.DirectoryDataPointer.data)
         return self.CompiledParameter
 
@@ -244,5 +259,5 @@ class IGEStorage(IGESTerminate):
         return out
 
 if __name__ == "__main__":
-    import IGESTest
+    import Examples.IGESTest
     IGESTest.testrun()

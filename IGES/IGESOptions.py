@@ -2,12 +2,19 @@
 # -*- coding: utf-8 -*-
 #@PydevCodeAnalysisIgnore
 """
-Created on Tue Apr  2 18:07:29 2013
-@author: Rod Persky
-@license: Licensed under the Academic Free License ("AFL") v. 3.0
+.. module:: IGES.IGESOptions
+   :platform: Agnostic, Windows
+   :synopsis: Main GUI program
+   
+.. requires time (strftime)
+
+.. Created on Tue Apr  2 18:07:29 2013
+.. codeauthor::  Rod Persky <rodney.persky {removethis} AT gmail _DOT_ com>
+.. Licensed under the Academic Free License ("AFL") v. 3.0
+.. Source at https://github.com/Rod-Persky/pyIGES
 """
 
-
+# External Libraries / Modules
 from time import strftime
 
 
@@ -43,7 +50,7 @@ class IGESEntityTypeNumber(IGESParameter):
     def setCopiousData(self):          self.value = 106
     def setLinearPath2D(self):         self.value = 111
     def setLinearPath3D(self):         self.value = 112
-    def setClosedPlanarCurve(self):    self.value = 163
+    def setClosedPlanarCurve(self):    self.value = 106
     def setPlane(self):                self.value = 108
     def setLine(self):                 self.value = 110
     def setSplineCurve(self):          self.value = 112
@@ -69,6 +76,8 @@ class IGESEntityTypeNumber(IGESParameter):
     def setRightCircConSurf(self):     self.value = 194
     def setSphericalSurf(self):        self.value = 196
     def setToroidSurf(self):           self.value = 198
+    def setSubfigureInstance(self):    self.value = 308
+    def setCircularArray(self):        self.value = 414
 
 
 class IGESLineFontPattern(IGESParameter):
@@ -116,7 +125,7 @@ class IGESEntityUseFlag(IGESParameter):
 
 class IGESHierachy(IGESParameter):
     def setGlobalTopDown(self): self.value = 0
-    def setGlobalDifer(self): self.value = 1
+    def setGlobalDefer(self): self.value = 1
     def setUseHieracyProperty(self): self.value = 2
 
 

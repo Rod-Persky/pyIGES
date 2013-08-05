@@ -1,38 +1,30 @@
 #!python3.3
 # -*- coding: utf-8 -*-
 """
-Created on Tue Apr  2 18:33:27 2013
-@author: Rod Persky
-@license: Licensed under the Academic Free License ("AFL") v. 3.0
+.. module:: IGESTest
+   :platform: Agnostic
+   :synopsis: Test IGES system
+
+.. requires numpy, os (startfile)
+
+.. Created on Tue Apr  2 18:33:27 2013
+.. codeauthor::  Rod Persky <rodney.persky {removethis} AT gmail _DOT_ com>
+.. Licensed under the Academic Free License ("AFL") v. 3.0
+.. Source at https://github.com/Rod-Persky/pyIGES
 """
 
-import os
-import sys
+# External Libraries / Modules
 import numpy as np
-from scipy.misc import comb
+from os import startfile
 
-sys.path.append('../')
+# Internal Modules
 from IGES.IGESCore import IGEStorage
 from IGES.IGESGeomLib import IGESPoint
 import IGES.IGESGeomLib as IGES
+from GeomLib import bezier_curve
 
 
-def bernstein_poly(n, i, u):
-    return comb(n, i) * u ** (i) * (1 - u) ** (n - i)
-
-
-def bezier_curve(P, nTimes=1000, dC=False):
-    n = len(P[1])
-    u = np.linspace(0.0, 1.0, nTimes)
-    polynomial_array = np.empty([n, nTimes])
-
-    for i in range(0, n):
-        polynomial_array[i] = bernstein_poly(n - 1, i, u)
-
-    return np.dot(P, polynomial_array)
-
-
-def testrun():
+def testrun(filename="IGESFile.igs"):
     system = IGEStorage()
     system.StartSection.Prolog = " "
     system.GlobalSection.IntegerBits = int(32)
@@ -66,15 +58,22 @@ def testrun():
 
     polyln = IGES.IGESGeomPolyline()
 
-    for n in range(0, 10):
+    for n in range(0, 5):
         for i in range(0, len(bezi[0])):
             polyln.AddPoint(IGESPoint(bezi[0][i], bezi[1][i]))
         bezi[0] = bezi[0] + 4
 
     system.Commit(polyln)
-    system.Commit(IGES.IGESExtrude(polyln.DirectoryDataPointer.data, IGESPoint(0,0,10)))
-    system.save()
-    os.startfile("IGESFile.igs")
+    
+    line = IGES.IGESGeomLine(IGESPoint(-2, -5, 0), IGESPoint(22, -5, 0))
+    system.Commit(line)
+    
+    system.Commit(IGES.IGESRevolve(polyln, line))
+
+    #system.Commit(IGES.IGESExtrude(polyln.DirectoryDataPointer.data, IGESPoint(0,0,10)))
+
+    system.save(filename)
+    startfile(filename)
 
 
 if __name__ == '__main__':
