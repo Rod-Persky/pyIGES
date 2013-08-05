@@ -4,8 +4,6 @@ python:
   - 3.2
   - 3.3
 
-install: "sudo apt-get -qq install python3-matplotlib python3-scipy"
-
 script:
   - python setup.py clean
   - python setup.py build_ext --inplace
