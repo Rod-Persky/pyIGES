@@ -10,7 +10,7 @@
 .. Created on Wed Mar 20 21:11:53 2013
 .. codeauthor::  Rod Persky <rodney.persky@gmail.com>
 .. Licensed under the Academic Free License ("AFL") v. 3.0
-.. Source at https://bitbucket.org/Rod-Persky/3d-turbomachinery-design-tool
+.. Source at https://github.com/Rod-Persky/pyIGES
 
 
 .. todolist::
@@ -43,9 +43,9 @@ import numpy as np
 from scipy.misc import comb
 
 
-def mkCentLinePt(origin, theta, length) :
+def mkCentLinePt(origin, theta, length):
     """Make centered line points,
-    A line that is centered on a node with a defined length and theta.
+    A line that is centred on a node with a defined length and theta.
 
     Parameters
     -----------
