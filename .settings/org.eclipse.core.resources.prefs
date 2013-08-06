@@ -1,5 +1,6 @@
 eclipse.preferences.version=1
 encoding//doc/conf.py=utf-8
+encoding//doc/findmodules.py=utf-8
 encoding//pyiges/IGESCompile.py=utf-8
 encoding//pyiges/IGESCore.py=utf-8
 encoding//pyiges/IGESGeomLib.py=utf-8

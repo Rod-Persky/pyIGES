@@ -2,7 +2,7 @@
 
 rmdir autodoc
 mkdir autodoc
-py findmodules.py -d c:\Users\Rodney\Documents\repo\TurbineGen\doc\autodoc -s rst c:\Users\Rodney\Documents\repo\TurbineGen\trunk 
+py findmodules.py -d autodoc -s rst ../pyiges
 
 REM Command file for Sphinx documentation
 
