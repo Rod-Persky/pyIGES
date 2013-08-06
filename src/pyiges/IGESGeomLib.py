@@ -17,7 +17,7 @@
 import numpy as np
 
 # Internal Modules
-from IGES.IGESCore import IGESItemData
+from pyiges.IGESCore import IGESItemData
 
 
 class IGESPoint:

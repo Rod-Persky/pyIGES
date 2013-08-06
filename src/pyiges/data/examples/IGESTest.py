@@ -18,10 +18,10 @@ import numpy as np
 from os import startfile
 
 # Internal Modules
-from IGES.IGESCore import IGEStorage
-from IGES.IGESGeomLib import IGESPoint
-import IGES.IGESGeomLib as IGES
-from GeomLib import bezier_curve
+from pyiges.IGESCore import IGEStorage
+from pyiges.IGESGeomLib import IGESPoint
+import pyiges.IGESGeomLib as IGES
+from pyiges.data.examples.GeomLib import bezier_curve
 
 
 def testrun(filename="IGESFile.igs"):

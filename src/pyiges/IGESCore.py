@@ -14,15 +14,15 @@
 """
 
 
-from IGES.IGESOptions import (IGESModelUnits,
-                              IGESEntityTypeNumber,
-                              IGESStatusNumber,
-                              IGESColorNumber,
-                              IGESLineFontPattern,
-                              IGESPointer,
-                              IGESDateTime)
+from pyiges.IGESOptions import (IGESModelUnits,
+                                IGESEntityTypeNumber,
+                                IGESStatusNumber,
+                                IGESColorNumber,
+                                IGESLineFontPattern,
+                                IGESPointer,
+                                IGESDateTime)
 
-import IGES.IGESCompile as IGESCompile
+import pyiges.IGESCompile as IGESCompile
 
 
 class IGESectionFunctions:
@@ -34,7 +34,7 @@ class IGESectionFunctions:
         return IGESPointer(self._linecount)
 
     def __str__(self):
-        return IGESCompile.Join(self._data, self.LetterCode)
+        return IGESCompile.format_line(self._data, self.LetterCode)
 
     def AddLines(self, lines):
         self._linecount = self._linecount + len(lines)
@@ -259,5 +259,5 @@ class IGEStorage(IGESTerminate):
         return out
 
 if __name__ == "__main__":
-    import Examples.IGESTest
+    import pyiges.data.examples.IGESTest as IGESTest
     IGESTest.testrun()

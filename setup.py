@@ -2,9 +2,12 @@
 # -*- coding: utf-8 -*-
 #from distutils.core import setup
 
-from ez_setup import use_setuptools
-use_setuptools()
-from setuptools import setup, find_packages
+try:
+    from setuptools import setup, find_packages
+except ImportError:
+    from ez_setup import use_setuptools
+    use_setuptools()
+    from setuptools import setup, find_packages
 
 import sys
 
@@ -16,7 +19,7 @@ PY3 = py_version[0] == 3
 if not PY3:
     raise RuntimeError('Python 3.x is required')
 
-with open('README') as file:
+with open('README.md') as file:
     long_description = file.read()
 
 setup(
@@ -80,6 +83,8 @@ setup(
       
       install_requires=['numpy>=1.7.0',
                         'scipy>=0.12.0'],
-      include_package_data = True
+      include_package_data = True,
+      
+      py_modules = ['ez_setup']
       
       )
