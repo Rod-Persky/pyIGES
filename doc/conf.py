@@ -28,8 +28,11 @@ copyright = '%s, Rodney Persky' %time.strftime('%Y')
 
 # The short X.Y version.
 version = '0.0'
+version_file = open("../pyIGESVersion", 'r')
+version = version_file.read()
+version_file.close()
 # The full version, including alpha/beta/rc tags.
-release = 'alpha'
+release = '%s alpha' %version
 
 rst_epilog = """
 .. |project| replace:: {project}""".format(project=project)

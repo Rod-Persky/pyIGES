@@ -13,6 +13,25 @@ import sys
 
 DISTUTILS_DEBUG = True
 
+if DISTUTILS_DEBUG:
+    import urllib.request
+    import ast
+    v_request = urllib.request.urlopen('https://api.travis-ci.org/repos/Rod-Persky/pyIGES')
+    v_request = str(v_request.read())
+    v_request = "{" + v_request.split(sep=",")[5] + "}"
+    v_request = ast.literal_eval(v_request)
+    version = "0.0." + str(int(v_request['last_build_number']) + 1)
+    
+    version_file = open("pyIGESVersion", 'w')
+    version_file.write(version)
+    version_file.close()
+
+else:
+    version_file = open("pyIGESVersion", 'r')
+    version = version_file.read()
+    version_file.close()
+    
+
 py_version = sys.version_info[:2]
 PY3 = py_version[0] == 3
 
@@ -24,7 +43,7 @@ with open('README.md') as file:
 
 setup(
       name = 'pyIGES',
-      version = '0.0.9',  # major.minor.revision
+      version = version,  # major.minor.revision
       
       platforms = ['Linux', 'Windows'],
       url = 'https://github.com/Rod-Persky/pyIGES',
