@@ -68,7 +68,7 @@ setup(
 
 
       packages = ['pyiges'],
-      package_dir = {'pyiges': 'src/pyiges'},
+      package_dir = {'pyiges': 'pyiges'},
       package_data = {'pyiges': ['data/examples/*.py']},
       zip_safe = True,
       
