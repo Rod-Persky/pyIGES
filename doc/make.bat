@@ -1,9 +1,5 @@
 @ECHO OFF
 
-rmdir autodoc
-mkdir autodoc
-py findmodules.py -d autodoc -s rst ../pyiges
-
 REM Command file for Sphinx documentation
 
 set SPHINXBUILD=c:\Python33\Scripts\sphinx-build

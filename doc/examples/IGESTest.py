@@ -1,7 +1,7 @@
 #!python3.3
 # -*- coding: utf-8 -*-
 """
-.. module:: IGESTest
+.. module:: examples.IGESTest
    :platform: Agnostic
    :synopsis: Test IGES system
 

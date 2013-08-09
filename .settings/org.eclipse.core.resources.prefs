@@ -1,5 +1,7 @@
 eclipse.preferences.version=1
 encoding//doc/conf.py=utf-8
+encoding//doc/examples/GeomLib.py=utf-8
+encoding//doc/examples/IGESTest.py=utf-8
 encoding//doc/findmodules.py=utf-8
 encoding//pyiges/IGESCompile.py=utf-8
 encoding//pyiges/IGESCore.py=utf-8
@@ -7,8 +9,6 @@ encoding//pyiges/IGESGeomLib.py=utf-8
 encoding//pyiges/IGESLoadConfig.py=utf-8
 encoding//pyiges/IGESOptions.py=utf-8
 encoding//pyiges/__init__.py=utf-8
-encoding//pyiges/data/examples/GeomLib.py=utf-8
-encoding//pyiges/data/examples/IGESTest.py=utf-8
 encoding/IGESTest.py=utf-8
 encoding/make_distributions.py=utf-8
 encoding/setup.py=utf-8

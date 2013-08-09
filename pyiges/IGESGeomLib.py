@@ -169,27 +169,29 @@ class IGESGeomCompositeCurve(IGESItemData):  #102
         self.ParameterData[1] = self.object_count
         
 
-class IGESGeomPlaneaaaa(IGESItemData):
-    def __init__(self):
-        IGESItemData.__init__(self)
-        self.EntityType.setClosedPlanarCurve()
-        self.FormNumber = 63
-        
-        self.AddParameters([2])  # Page 115, x, y, z
-        
-        self.pointcount = 0
-        self.AddParameters([self.pointcount])
-        
-        self.AddParameters([0])
-        
-    def AddPoint(self, *args):
-        """Add surface bounding point
-        *args is IGESPoint"""
-        
-        for IGESPoint in args:
-            self.AddParameters([IGESPoint.x, IGESPoint.y, IGESPoint.z])
-            self.pointcount = self.pointcount + 1
-            self.ParameterData[1] = self.pointcount
+#===============================================================================
+# class IGESGeomPlaneaaaa(IGESItemData):
+#     def __init__(self):
+#         IGESItemData.__init__(self)
+#         self.EntityType.setClosedPlanarCurve()
+#         self.FormNumber = 63
+#         
+#         self.AddParameters([2])  # Page 115, x, y, z
+#         
+#         self.pointcount = 0
+#         self.AddParameters([self.pointcount])
+#         
+#         self.AddParameters([0])
+#         
+#     def AddPoint(self, *args):
+#         """Add surface bounding point
+#         *args is IGESPoint"""
+#         
+#         for IGESPoint in args:
+#             self.AddParameters([IGESPoint.x, IGESPoint.y, IGESPoint.z])
+#             self.pointcount = self.pointcount + 1
+#             self.ParameterData[1] = self.pointcount
+#===============================================================================
 
 
 class IGESGeomPlane(IGESItemData):

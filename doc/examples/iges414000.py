@@ -1,4 +1,9 @@
 '''
+.. module:: examples.iges414000
+   :platform: Agnostic, Windows
+   :synopsis: Test for IGES type 414 form 0
+   
+   
 Created on 01/08/2013
 
 @author: Rodney Persky
@@ -7,9 +12,9 @@ Created on 01/08/2013
 doesn't actually render the extra persons)
 '''
 
-from IGES.IGESCore import IGEStorage
-import IGES.IGESGeomLib as IGES
-from IGES.IGESGeomLib import IGESPoint
+from pyiges.IGESCore import IGEStorage
+import pyiges.IGESGeomLib as IGES
+from pyiges.IGESGeomLib import IGESPoint
 import os
 
 def person_414():   

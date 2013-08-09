@@ -49,10 +49,3 @@ pyiges Package
     :undoc-members:
     :show-inheritance:
 
-Subpackages
------------
-
-.. toctree::
-
-    pyiges.data
-
