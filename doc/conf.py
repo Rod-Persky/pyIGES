@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 
 import sys, os, time
-sys.path.append(os.path.abspath('../pyiges'))
-sys.path.append(os.path.abspath('_themes'))
-sys.path.append(os.path.abspath('examples'))
+sys.path.insert(0, os.path.abspath('../pyiges'))
+sys.path.insert(0, os.path.abspath('_themes'))
+sys.path.insert(0, os.path.abspath('examples'))
 
 
 
