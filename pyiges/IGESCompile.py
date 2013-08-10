@@ -13,6 +13,12 @@
 .. Source at https://github.com/Rod-Persky/pyIGES
 """
 
+try:
+    import numpy
+except:
+    import mock
+    numpy = mock.Mock()
+
 
 def format_line(data, section):
     out = ""

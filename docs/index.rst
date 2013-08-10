@@ -12,7 +12,7 @@ of points - whatever those points represents is up to you. Generally, those poin
 define a profile or the outside of a surface they are stored in a numpy type or 
 standard python type in the form ``[[x], [y], [z]]`` where z is optional. The next 
 steps is to push your data into the IGES geometry, how and what way is covered in 
-the :ref:`tutorials` section; also there are example files that show how to 
+the tutorials section; also there are example files that show how to 
 generate geometry that can be found in the Wiznet iges file examples page. 
 
 Beyond what is a canned, watch out there be dragons message, this package is useful 

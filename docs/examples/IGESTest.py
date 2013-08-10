@@ -21,17 +21,17 @@ try:
 except:
     if os.environ.get('READTHEDOCS', None) == 'True':
         import mock
-        numpy = mock.Mock(return_value=None)
+        numpy = mock.Mock(return_value = None)
 
 
 # Internal Modules
 from pyiges.IGESCore import IGEStorage
 from pyiges.IGESGeomLib import IGESPoint
 import pyiges.IGESGeomLib as IGES
-from pyiges.data.examples.GeomLib import bezier_curve
+from examples.GeomLib import bezier_curve
 
 
-def testrun(filename="IGESFile.igs"):
+def testrun(filename = "IGESFile.igs"):
     system = IGEStorage()
     system.StartSection.Prolog = " "
     system.GlobalSection.IntegerBits = int(32)
@@ -61,7 +61,7 @@ def testrun(filename="IGESFile.igs"):
         P.extend
 
     P = numpy.transpose(P)
-    bezi = bezier_curve(P, nTimes=50)
+    bezi = bezier_curve(P, nTimes = 50)
 
     polyln = IGES.IGESGeomPolyline()
 
@@ -71,16 +71,16 @@ def testrun(filename="IGESFile.igs"):
         bezi[0] = bezi[0] + 4
 
     system.Commit(polyln)
-    
+
     line = IGES.IGESGeomLine(IGESPoint(-2, -5, 0), IGESPoint(22, -5, 0))
     system.Commit(line)
-    
+
     system.Commit(IGES.IGESRevolve(polyln, line))
 
     #system.Commit(IGES.IGESExtrude(polyln.DirectoryDataPointer.data, IGESPoint(0,0,10)))
 
     system.save(filename)
-    
+
     if not os.environ.get('READTHEDOCS', None) == 'True':
         startfile(filename)
 

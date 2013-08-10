@@ -1,5 +1,6 @@
 *.py[cod]
 pyiges/*/*.igs
+*benchmark.igs
 _build
 
 Thumbs.db
