@@ -14,24 +14,16 @@
 """
 
 
+import os.environ
+
 try:
-    import blah
-    import numpy as np
+    import numpy
     from scipy.misc import comb
-    
-except Exception as inst:
-    import sys
-    
-    try:
+except:
+    if os.environ.get('READTHEDOCS', None) == 'True':
         import mock
-    
-        MOCK_MODULES = ['numpy', 'scipy', 'matplotlib', 'matplotlib.pyplot', 'scipy.interpolate']
-        for mod_name in MOCK_MODULES:
-            sys.modules[mod_name] = mock.Mock()
-            
-    except ImportError:
-        print("Dang, not even mock exists... well lets just ignore it all #firstworldproblems")
-        pass
+        numpy = mock.Mock(return_value=None)
+        scipy = mock.Mock(return_value=None)
 
 
 def bernstein_poly(n, i, u):
@@ -41,8 +33,8 @@ def bernstein_poly(n, i, u):
 def bezier_curve(P, nTimes=1000, dC=False):
 
     n = len(P[1])
-    u = np.linspace(0.0, 1.0, nTimes)
-    polynomial_array = np.empty([n, nTimes])
+    u = numpy.linspace(0.0, 1.0, nTimes)
+    polynomial_array = numpy.empty([n, nTimes])
 
     for i in range(0, n):
         polynomial_array[i] = bernstein_poly(n - 1, i, u)

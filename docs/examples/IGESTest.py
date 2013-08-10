@@ -14,23 +14,15 @@
 """
 
 # External Libraries / Modules
-from os import startfile
+from os import (startfile, environ)
 
 try:
     import numpy
-except Exception as inst:
-    import sys
-    
-    try:
+except:
+    if os.environ.get('READTHEDOCS', None) == 'True':
         import mock
-    
-        MOCK_MODULES = ['numpy', 'scipy', 'matplotlib', 'matplotlib.pyplot', 'scipy.interpolate']
-        for mod_name in MOCK_MODULES:
-            sys.modules[mod_name] = mock.Mock()
-            
-    except ImportError:
-        print("Dang, not even mock exists... well lets just ignore it all #firstworldproblems")
-        pass
+        numpy = mock.Mock(return_value=None)
+
 
 # Internal Modules
 from pyiges.IGESCore import IGEStorage
@@ -88,7 +80,9 @@ def testrun(filename="IGESFile.igs"):
     #system.Commit(IGES.IGESExtrude(polyln.DirectoryDataPointer.data, IGESPoint(0,0,10)))
 
     system.save(filename)
-    startfile(filename)
+    
+    if not os.environ.get('READTHEDOCS', None) == 'True':
+        startfile(filename)
 
 
 if __name__ == '__main__':

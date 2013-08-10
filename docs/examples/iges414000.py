@@ -80,7 +80,9 @@ def person_414():
     system.Commit(person_array)                                      
     
     system.save("414-000.igs")
-    os.startfile("414-000.igs")
+    
+    if not os.environ.get('READTHEDOCS', None) == 'True':
+        os.startfile("414-000.igs")
     
     
     print(system)
