@@ -14,8 +14,13 @@
 """
 
 # External Libraries / Modules
-import numpy as np
 from os import startfile
+
+try:
+    import numpy
+except Exception as inst:
+    import sys
+    sys.exit("{} is required".format(str(inst)[3:]))
 
 # Internal Modules
 from pyiges.IGESCore import IGEStorage
@@ -37,23 +42,23 @@ def testrun(filename="IGESFile.igs"):
     system.GlobalSection.MaxCoordValue = float(71)
 
     P = [[0, 0],
-         [np.divide(1, 3), np.divide(np.pi, 6)],
-         [np.divide(2, 3), 1],
+         [numpy.divide(1, 3), numpy.divide(numpy.pi, 6)],
+         [numpy.divide(2, 3), 1],
          [1, 1],
-         [1 + np.divide(1, 3), 1],
-         [1 + np.divide(2, 3), np.divide(np.pi, 6)],
+         [1 + numpy.divide(1, 3), 1],
+         [1 + numpy.divide(2, 3), numpy.divide(numpy.pi, 6)],
          [2, 0],
-         [2 + np.divide(1, 3), 0 - np.divide(np.pi, 6)],
-         [2 + np.divide(2, 3), 0 - 1],
+         [2 + numpy.divide(1, 3), 0 - numpy.divide(numpy.pi, 6)],
+         [2 + numpy.divide(2, 3), 0 - 1],
          [3, 0 - 1],
-         [3 + np.divide(1, 3), 0 - 1],
-         [3 + np.divide(2, 3), 0 - np.divide(np.pi, 6)],
+         [3 + numpy.divide(1, 3), 0 - 1],
+         [3 + numpy.divide(2, 3), 0 - numpy.divide(numpy.pi, 6)],
          [4, 0]]
 
     for i in range(0, 1):
         P.extend
 
-    P = np.transpose(P)
+    P = numpy.transpose(P)
     bezi = bezier_curve(P, nTimes=50)
 
     polyln = IGES.IGESGeomPolyline()

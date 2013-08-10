@@ -13,8 +13,14 @@
 .. Source at https://github.com/Rod-Persky/pyIGES
 """
 
-import numpy as np
-from scipy.misc import comb
+
+try:
+    import numpy as np
+    from scipy.misc import comb
+except Exception as inst:
+    import sys
+    sys.exit("{} is required".format(str(inst)[3:]))
+
 
 def bernstein_poly(n, i, u):
     return comb(n, i) * u ** (i) * (1 - u) ** (n - i)

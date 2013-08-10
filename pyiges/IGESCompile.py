@@ -13,9 +13,6 @@
 .. Source at https://github.com/Rod-Persky/pyIGES
 """
 
-# External Libraries / Modules
-import numpy
-
 
 def format_line(data, section):
     out = ""

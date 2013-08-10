@@ -14,7 +14,7 @@
 """
 
 # External Libraries / Modules
-import numpy as np
+from math import pi
 
 # Internal Modules
 from pyiges.IGESCore import IGESItemData
@@ -49,7 +49,7 @@ class IGESExtrude(IGESItemData):  #122
 
 
 class IGESRevolve(IGESItemData):  # 120
-    def __init__(self, profile, center_line, start_angle=0, terminate_angle=np.pi*2):
+    def __init__(self, profile, center_line, start_angle=0, terminate_angle=pi*2):
         IGESItemData.__init__(self)
         self.EntityType.setRevolvedSurface()
 
@@ -68,21 +68,23 @@ class IGESGeomLine(IGESItemData):  # 116
                             endpoint.x, endpoint.y, endpoint.z])
 
 
-class IGESCentLinePt(IGESGeomLine):
-    def __init__(self, node, theta, length):
-
-        xoffset = length * 0.5 * np.cos(theta)
-        yoffset = length * 0.5 * np.sin(theta)
-
-        startpoint = IGESPoint(node.x + xoffset, node.y + yoffset)
-        endpoint = IGESPoint(node.x - xoffset, node.y - yoffset)
-
-        startpoint.x = np.around(startpoint.x, 7)
-        startpoint.y = np.around(startpoint.y, 7)
-        endpoint.x = np.around(endpoint.x, 7)
-        endpoint.y = np.around(endpoint.y, 7)
-
-        IGESGeomLine.__init__(self, startpoint, endpoint)
+#===============================================================================
+# class IGESCentLinePt(IGESGeomLine):
+#     def __init__(self, node, theta, length):
+# 
+#         xoffset = length * 0.5 * np.cos(theta)
+#         yoffset = length * 0.5 * np.sin(theta)
+# 
+#         startpoint = IGESPoint(node.x + xoffset, node.y + yoffset)
+#         endpoint = IGESPoint(node.x - xoffset, node.y - yoffset)
+# 
+#         startpoint.x = np.around(startpoint.x, 7)
+#         startpoint.y = np.around(startpoint.y, 7)
+#         endpoint.x = np.around(endpoint.x, 7)
+#         endpoint.y = np.around(endpoint.y, 7)
+# 
+#         IGESGeomLine.__init__(self, startpoint, endpoint)
+#===============================================================================
 
 
 class IGESGeomArc(IGESItemData):  # Wrapper of iges geometry
