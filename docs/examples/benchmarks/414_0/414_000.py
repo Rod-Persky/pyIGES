@@ -21,7 +21,7 @@ it should be possible to do circular patterns around any axis and for
 an arbitrarily complex group.
 
 
-.. figure:: 414-000.gif
+.. figure:: 414-000.png
    :scale: 70 %
    :height: 347 px
    :width: 300 px
