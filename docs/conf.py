@@ -56,7 +56,7 @@ source_suffix = '.rst'
 #source_encoding = 'utf-8-sig'
 
 # The master toctree document.
-master_doc = 'pages/index'
+master_doc = 'index'
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -142,7 +142,7 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('pages/index', 'PYIGESGeomTool.tex', project,
+  ('index', 'PYIGESGeomTool.tex', project,
    'Rodney Persky', 'manual'),
 ]
 
@@ -172,7 +172,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('pages/index', 'PYIGESGeomTool', project,
+    ('index', 'PYIGESGeomTool', project,
      ['Rodney Persky'], 1)
 ]
 
@@ -186,7 +186,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('pages/index', 'PYIGESGeomTool', project,
+  ('index', 'PYIGESGeomTool', project,
    'Rodney Persky', 'PYIGESGeomTool', 'One line description of project.',
    'Miscellaneous'),
 ]
