@@ -15,19 +15,6 @@ steps is to push your data into the IGES geometry, how and what way is covered i
 the :ref:`tutorials` section; also there are example files that show how to 
 generate geometry that can be found in the Wiznet iges file examples page. 
 
-.. only:: html
-
-	The following sections are specifically about the development and source code of 
-	the project. Make reference to :ref:`genindex` and :ref:`modindex` which provides a 
-	general and module index respectively.
-	
-.. toctree::
-   :maxdepth: 2
-
-   pages/pyiges.rst
-   pages/examples.rst
-   pages/tutorials/index.rst
-
 Beyond what is a canned, watch out there be dragons message, this package is useful 
 when it comes to using Python to do something interesting - and in this case, that 
 interesting thing is to make 3D objects. This library, package, or whatever the 
@@ -45,12 +32,23 @@ modifications to the pyiges library (aka, a derivative work) must be made public
 (and preferably though a merge to the original work on GitHub) (clause 1, c).  Why 
 AFL? Then developers can all take advantage of the improvements that have been 
 made. This public distribution of derivative works is similar to a number of other 
-licences, however AFL is also easy to read. Check it out on `
-http://opensource.org/licenses/AFL-3.0`
+licences, however AFL is also easy to read. Check it out on 
+``http://opensource.org/licenses/AFL-3.0``
 
 
 
-The following seconds discuss how to get going with |project|.
 
+.. only:: html
+
+	The following sections are specifically about the development and source code of 
+	the project. Make reference to :ref:`genindex` and :ref:`modindex` which provides a 
+	general and module index respectively.
+	
+.. toctree::
+   :maxdepth: 2
+
+   pages/pyiges.rst
+   pages/examples.rst
+   pages/tutorials/index.rst
 
 
