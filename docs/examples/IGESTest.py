@@ -20,7 +20,17 @@ try:
     import numpy
 except Exception as inst:
     import sys
-    sys.exit("{} is required".format(str(inst)[3:]))
+    
+    try:
+        import mock
+    
+        MOCK_MODULES = ['numpy', 'scipy', 'matplotlib', 'matplotlib.pyplot', 'scipy.interpolate']
+        for mod_name in MOCK_MODULES:
+            sys.modules[mod_name] = mock.Mock()
+            
+    except ImportError:
+        print("Dang, not even mock exists... well lets just ignore it all #firstworldproblems")
+        pass
 
 # Internal Modules
 from pyiges.IGESCore import IGEStorage

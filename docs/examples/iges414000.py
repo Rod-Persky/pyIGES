@@ -15,6 +15,7 @@ doesn't actually render the extra persons)
 from pyiges.IGESCore import IGEStorage
 import pyiges.IGESGeomLib as IGES
 from pyiges.IGESGeomLib import IGESPoint
+
 import os
 
 def person_414():   
