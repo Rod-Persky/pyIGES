@@ -2,6 +2,8 @@
 *.igs
 _build
 
+Thumbs.db
+
 # C extensions
 *.so
 
