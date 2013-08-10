@@ -1,0 +1,11 @@
+body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+
+
+tt.descname {
+    background-color: transparent;
+    font-weight: bold;
+    font-size: 1em;
+}

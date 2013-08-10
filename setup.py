@@ -88,7 +88,7 @@ setup(
 
       packages = ['pyiges'],
       package_dir = {'pyiges': 'pyiges'},
-      package_data = {'pyiges': ['data/examples/*.py']},
+      package_data = {'pyiges': ['docs/examples/*.py']},
       zip_safe = True,
       
       # Cannot automatically download from UCI at present due to filtering or some such
