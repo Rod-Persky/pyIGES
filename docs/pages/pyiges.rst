@@ -1,6 +1,3 @@
-pyiges Package
-==============
-
 :mod:`pyiges` Package
 ---------------------
 
@@ -9,43 +6,14 @@ pyiges Package
     :undoc-members:
     :show-inheritance:
 
-:mod:`IGESCompile` Module
--------------------------
 
-.. automodule:: pyiges.IGESCompile
-    :members:
-    :undoc-members:
-    :show-inheritance:
+.. toctree::
+   :maxdepth: 2
+   :glob:
+   :numbered:
 
-:mod:`IGESCore` Module
-----------------------
+   pyiges/*
 
-.. automodule:: pyiges.IGESCore
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
-:mod:`IGESGeomLib` Module
--------------------------
 
-.. automodule:: pyiges.IGESGeomLib
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`IGESLoadConfig` Module
-----------------------------
-
-.. automodule:: pyiges.IGESLoadConfig
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`IGESOptions` Module
--------------------------
-
-.. automodule:: pyiges.IGESOptions
-    :members:
-    :undoc-members:
-    :show-inheritance:
 

@@ -14,12 +14,13 @@
 """
 
 
-import os.environ
+
 
 try:
     import numpy
     from scipy.misc import comb
 except:
+    import os
     if os.environ.get('READTHEDOCS', None) == 'True':
         import mock
         numpy = mock.Mock(return_value=None)

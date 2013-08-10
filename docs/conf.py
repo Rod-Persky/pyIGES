@@ -4,8 +4,8 @@
 import sys, os, time
 
 sys.path.append(os.path.abspath('../'))        # Base folder
-sys.path.append(os.path.abspath('./'))         # This folder
-sys.path.append(os.path.abspath('../pyiges'))  # Source code folder
+sys.path.append(os.path.abspath('./'))         # This folder, for import of examples
+#sys.path.append(os.path.abspath('../pyiges'))  # Source code folder
 sys.path.append(os.path.abspath('_themes'))    # Themes folder
 
 print("System Path:")

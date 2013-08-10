@@ -20,12 +20,22 @@ from math import pi
 from pyiges.IGESCore import IGESItemData
 
 
-class IGESPoint:
+class IGESPoint:  # BASIC ITEM, NOT A GEOM ITEM
     def __init__(self, x, y, z=0):
         self.x = x
         self.y = y
         self.z = z
 
+
+class IGESGeomPoint(IGESItemData):
+    def __init__(self, node):
+        IGESItemData.__init__(self)
+        self.EntityType.setPoint()
+        self.LineFontPattern.setSolid()
+        self.LineWeightNum = 1
+        self.ParameterLC = 1
+
+        self.AddParameters([node.x, node.y, node.z, 0])
 
 class IGESExtrude(IGESItemData):  #122
     def __init__(self, IGESObject, Length):
@@ -131,7 +141,8 @@ class IGESGeomSphere(IGESItemData):
 
 class IGESGeomPolyline(IGESItemData):
     """IGES Simple Closed Planar Curve Entity (Type 106, Form 63)
-       Page 86"""
+       Page 86
+       123"""
     def __init__(self, *args):
         IGESItemData.__init__(self)
         self.LineFontPattern.setSolid()
@@ -245,25 +256,10 @@ class IGESGeomTrimSurface(IGESItemData):
         self.AddParameters([IGESClosedProfile.DirectoryDataPointer.data])
         self.count_boundaries = self.count_boundaries + 1
         self.ParameterData[2] = self.count_boundaries
-        
-            
-
-class IGESGeomPoint(IGESItemData):
-    def __init__(self, node):
-        IGESItemData.__init__(self)
-        self.EntityType.setPoint()
-        self.LineFontPattern.setSolid()
-        self.LineWeightNum = 1
-        self.ParameterLC = 1
-
-        self.AddParameters([node.x, node.y, node.z, 0])
 
 
 class IGESGeomTransform(IGESItemData):
-    """ Transform / Move Geometry
-    [XX, XY, XZ,
-     XY, YY, YZ,
-     XZ, YZ, ZZ]"""
+    """ Transform / Move Geometry"""
      
     def __init__(self, transform_matrix):
         IGESItemData.__init__(self)
@@ -276,7 +272,28 @@ class IGESGeomTransform(IGESItemData):
             raise TypeError("A transform matrix is 9 numbers")
         
         
-class IGESCircularArray(IGESItemData):
+class IGESCircularArray(IGESItemData): # 414
+    """
+    :param geometry: Geometry that is to be put into a circular array
+    :type geometry: :py:class:`~pyiges.IGESGeomLib.IGESGroup` or IGES Object
+    
+    :param int number: Number of occurance there should be of the geometry,
+                   starting from 1.
+                   
+    :param center: The node that rotation is done about
+    :type center: :py:class:`~pyiges.IGESGeomLib.IGESPoint`
+    
+    :param radius: Radius of the circle the objects are inscribed about
+    :type radius: int or float
+    
+    :param start_angle: Int/Float andle in _radians_ of the starting point
+    :type start_angle: int or float
+    
+    :param delta_angle: Int/Float angle across which the objects are distributed
+    :type delta_angle: int or float
+    
+    IGES Circular Array (Type 414, Form 0). Duplicate a form or group in a circle.
+    See :py:mod:`examples.benchmarks.414_0.414_000` for how this function works."""
     def __init__(self, geometry, number, center,
                  radius, start_angle, delta_angle):
         IGESItemData.__init__(self)

@@ -16,6 +16,9 @@ html, body {
   background-color: #eee;
 }
 
+.highlight .hll {
+    display: block;
+}
 
 /**************** Typo *************************/
 

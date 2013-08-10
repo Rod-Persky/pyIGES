@@ -154,33 +154,33 @@ class IGESGlobal(IGESDateTime, IGESModelUnits, IGESectionFunctions):
     LetterCode = "G"
     LineLength = 65
 
-    def __init__(self):  # 2.2.4.3
+    def __init__(self):                                     # 2.2.4.3
         IGESectionFunctions.__init__(self)
-        self.ParameterDelimiterCharacter = ","  # 1, String
-        self.RecordDelimiter = ";"  # 2, String
-        self.ProductIdentificationFromSender = "IGESFile"  # 3, String
-        self.FileName = "IGESFileAGenD"  # 4, String
-        self.NativeSystemID = "<unspecified>"  # 5, String
-        self.PreprocessorVersion = "<unspecified>"  # 6, String
-        self.IntegerBits = int(8)  # 7, Integer
-        self.SPMagnitude = int(19)  # 8, Integer
-        self.SPSignificance = int(3)  # 9, Integer
-        self.DPMagnitude = int(38)  # 10, Integer
-        self.DPSignificance = int(6)  # 11, Integer
+        self.ParameterDelimiterCharacter = ","              # 1, String
+        self.RecordDelimiter = ";"                          # 2, String
+        self.ProductIdentificationFromSender = "IGESFile"   # 3, String
+        self.FileName = "IGESFileAGenD"                     # 4, String
+        self.NativeSystemID = "<unspecified>"               # 5, String
+        self.PreprocessorVersion = "<unspecified>"          # 6, String
+        self.IntegerBits = int(8)                           # 7, Integer
+        self.SPMagnitude = int(19)                          # 8, Integer
+        self.SPSignificance = int(3)                        # 9, Integer
+        self.DPMagnitude = int(38)                          # 10, Integer
+        self.DPSignificance = int(6)                        # 11, Integer
         self.ProductIdentificationForReceiver = "IGESFile"  # 12, String
-        self.ModelSpaceScale = float(1)  # 13, Real
-        self.Units = IGESModelUnits()  # 14 = Integer, 15 = Flag
-        self.MaxNumberLineWeightGrads = int(1)  # 16, Integer
-        self.WidthMaxLineWeightUnits = float(16)  # 17, Real
-        self.DateTimeFileGeneration = str(IGESDateTime())  # 18, String
-        self.MaxUserResolution = float(0.0001)  # 19, Real
-        self.MaxCoordValue = float(1000)  # 20, Real
-        self.NameOfAuthor = "IGESAuthor"  # 21, String
-        self.AuthorOrg = "QUT"  # 22, String
-        self.VersionFlag = int(11)  # 23, Integer
-        self.DraftStandardFlag = int(0)  # 24, Integer
-        self.DateTimeCreated = str(IGESDateTime())  # 25, String
-        self.AppProtocol = "0"  # 26, String
+        self.ModelSpaceScale = float(1)                     # 13, Real
+        self.Units = IGESModelUnits()                       # 14 = Integer, 15 = Flag
+        self.MaxNumberLineWeightGrads = int(1)              # 16, Integer
+        self.WidthMaxLineWeightUnits = float(16)            # 17, Real
+        self.DateTimeFileGeneration = str(IGESDateTime())   # 18, String
+        self.MaxUserResolution = float(0.0001)              # 19, Real
+        self.MaxCoordValue = float(1000)                    # 20, Real
+        self.NameOfAuthor = "IGESAuthor"                    # 21, String
+        self.AuthorOrg = ""                                 # 22, String
+        self.VersionFlag = int(11)                          # 23, Integer
+        self.DraftStandardFlag = int(0)                     # 24, Integer
+        self.DateTimeCreated = str(IGESDateTime())          # 25, String
+        self.AppProtocol = "0"                              # 26, String
 
     def GetItems(self):
         return [self.ParameterDelimiterCharacter, self.RecordDelimiter,

@@ -1,0 +1,42 @@
+
+**************  Global Section  **************
+
+Parameter Delimiter Character    = ","
+Record Delimiter Character       = ";"
+Product ID from Sender           = "000-000"
+File Name                        = "000-000.IGS"
+System ID                        = "{unknown}"
+Pre-processor Version            = "{unknown}"
+Number of Bits for Integers      = 32
+Single Precision Magnitude       = 38
+Single Precision Significance    = 6
+Double Precision Magnitude       = 38
+Double Precision Significance    = 15
+Product ID for Receiver          = "000-000"
+Model Space Scale                = 1.00000
+Unit Flag                        = 1 - Inches
+Units                            = "IN"
+Maximum Number of Line Weights   = 8
+Size of Maximum Line Width       = 0.0160000
+Date & Time Stamp                = "19970830.164822"
+Minimum User-intended Resolution = 0.000100000
+Approximate Maximum Coordinate   = 8.00000
+Name of Author                   = " Dennette@WiZ-WORX.com"
+Author's Organization            = " www.IGES5x.org"
+IGES Version Number              = 11 - IGES Version 5.3 [USPRO/IPO-100-1996]
+Drafting Standard Code           = 3 - ANSI
+Model Creation/Change Date       = "871202.183510"
+Application Protocol/Subset ID   = "MIL-PRF-28000B Class 2"
+
+************  Terminate Section  *************
+
+      1 record in Start Section
+      4 records in Global Section
+      2 records in Directory Entry Section (1 entity)
+      1 record in Parameter Data Section
+
+************  Counts of ENT:FORM  ************
+
+     1 = 0:0000 Null
+
+There is 1 entity in this file.

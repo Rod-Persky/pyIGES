@@ -9,3 +9,7 @@ tt.descname {
     font-weight: bold;
     font-size: 1em;
 }
+
+.highlight .h11 {
+    display: block;
+}

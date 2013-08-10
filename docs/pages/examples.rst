@@ -6,7 +6,6 @@ examples Package
 
 .. automodule:: examples.GeomLib
     :members:
-    :undoc-members:
     :show-inheritance:
 
 :mod:`IGESTest` Module
@@ -14,14 +13,4 @@ examples Package
 
 .. automodule:: examples.IGESTest
     :members:
-    :undoc-members:
     :show-inheritance:
-
-:mod:`iges414000` Module
--------------------------
-
-.. automodule:: examples.iges414000
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
