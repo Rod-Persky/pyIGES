@@ -21,12 +21,12 @@ generate geometry that can be found in the Wiznet iges file examples page.
 	the project. Make reference to :ref:`genindex` and :ref:`modindex` which provides a 
 	general and module index respectively.
 	
-	.. toctree::
-	   :maxdepth: 2
-	
-	   pyiges.rst
-	   examples.rst
-	   tutorials/index.rst
+.. toctree::
+   :maxdepth: 2
+
+   pages/pyiges.rst
+   pages/examples.rst
+   pages/tutorials/index.rst
 
 Beyond what is a canned, watch out there be dragons message, this package is useful 
 when it comes to using Python to do something interesting - and in this case, that 
