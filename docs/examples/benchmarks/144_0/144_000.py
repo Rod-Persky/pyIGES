@@ -10,8 +10,6 @@
 .. Licensed under the Academic Free License ("AFL") v. 3.0
 .. Source at https://github.com/Rod-Persky/pyIGES
 
-.. include:: ../benchmark_links.rst
-
 .. figure:: 144-000.png
    :scale: 70 %
    :height: 528 px

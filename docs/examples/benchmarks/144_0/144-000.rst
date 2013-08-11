@@ -1,4 +1,16 @@
+.. include:: ../benchmark_links.rst
+
 Trimmed (Parametric) Surface :mod:`144_000` Benchmark
 ------------------------------------------------------
 
 .. automodule:: examples.benchmarks.144_0.144_000
+
+Trimmed (Parametric) Surface :mod:`144_000_example_1` Example 1
+---------------------------------------------------------------
+
+.. automodule:: examples.benchmarks.144_0.144_000_example_1
+
+Trimmed (Parametric) Surface :mod:`144_000_example_2` Example 2
+---------------------------------------------------------------
+
+.. automodule:: examples.benchmarks.144_0.144_000_example_2
