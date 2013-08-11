@@ -1,11 +1,9 @@
-#!python3.3
+#!python3
 # -*- coding: utf-8 -*-
 """
 .. module:: IGES.IGESCompile
    :platform: Agnostic, Windows
    :synopsis: Main GUI program
-
-.. requires numpy
 
 .. Created on Fri Mar 29 14:58:02 2013
 .. codeauthor::  Rod Persky <rodney.persky {removethis} AT gmail _DOT_ com>
@@ -13,11 +11,12 @@
 .. Source at https://github.com/Rod-Persky/pyIGES
 """
 
-try:
-    import numpy
-except:
-    import mock
-    numpy = mock.Mock()
+
+import decimal
+this_context = decimal.BasicContext
+this_context.prec = 8
+decimal.setcontext(this_context)
+
 
 
 def format_line(data, section):
@@ -58,11 +57,13 @@ def IGESUnaligned(data, IGESGlobal, section, DirectoryPointer = 0):
         elif itemType == int:
             Parameter = "{}".format(item)
         elif itemType == float:
-            Parameter = "{}".format(numpy.around(item, 5))
-        elif itemType == numpy.float64:
-            Parameter = "{}".format(numpy.around(item, 5))
+            Parameter = "{}".format(decimal.Decimal(item).normalize())
+            #Parameter = "{}".format(numpy.around(item, 5))
+        elif 'numpy.float64' in str(itemType):
+            Parameter = "{}".format(decimal.Decimal(item).normalize())
+            #Parameter = "{}".format(numpy.around(item, 5))
         else:
-            raise NotImplementedError("Unable to convert type ", itemType)
+            raise NotImplementedError("Unable to convert type ", str(itemType))
 
         #See if we can fit this parameter on the line
         if len(lines[nline]) == 0:

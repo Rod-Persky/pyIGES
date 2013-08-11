@@ -1,4 +1,4 @@
-#!python3.3
+#!python3
 # -*- coding: utf-8 -*-
 """
 .. module:: IGES.IGESLoadConfig
@@ -12,7 +12,7 @@
 """
 
 
-def IGESTreeWalk(object, level=0, levelname=""):
+def IGESTreeWalk(object, level = 0, levelname = ""):
     """Walk IGES Class Tree"""
 
     branch = list()
@@ -35,19 +35,12 @@ def IGESetKey(object, key, value):  # Otherwise known as reverse tree walk
                 if type(object.__dict__[IGESKey[0]]) == list:
                     # Because multline items are assumed to always be parameters, we
                     #  need to convert this to format [[line1],[line2],...[lineN],]
-                    #  note subversion info is automatically added unless you spicify
-                    #  where it can go with an @subversion on a line by itself
+
                     IGESItem = list()
-                    if "@subversion" not in value:
-                        value = ''.join((value, "\n@subversion"))
+
                     for line in value.split("\n"):
-                        if "@subversion" in line:  # The automatically updates from subversion, ignore it
-                            IGESItem.extend([["| Subversion Information:"],
-                                            ["| Last Revised $Date$"],
-                                            ["| Last HEAD $Rev$"],
-                                            ["| Last $Author$"], ["|"]])
-                        else:
                             IGESItem.append([line])
+
                     object.__dict__[IGESKey[0]] = IGESItem
                 elif type(object.__dict__[IGESKey[0]]) == str:
                     object.__dict__[IGESKey[0]] = value
@@ -64,7 +57,7 @@ def IGESetKey(object, key, value):  # Otherwise known as reverse tree walk
             raise ValueError("Traceback to value:", key)
 
 
-def IGESConfigFromFile(object, filename='IGESUserSettings.ini'):
+def IGESConfigFromFile(object, filename = 'IGESUserSettings.ini'):
     """Configure IGES settings from a file"""
 
     import configparser

@@ -19,7 +19,7 @@ from os import (startfile, environ)
 try:
     import numpy
 except:
-    if os.environ.get('READTHEDOCS', None) == 'True':
+    if environ.get('READTHEDOCS', None) == 'True':
         import mock
         numpy = mock.Mock(return_value = None)
 
@@ -78,6 +78,7 @@ def testrun(filename = "IGESFile.igs"):
     #system.Commit(IGES.IGESRevolve(polyln, line))
 
     #system.Commit(IGES.IGESExtrude(polyln.DirectoryDataPointer.data, IGESPoint(0,0,10)))
+    print(system)
 
     system.save(filename)
 

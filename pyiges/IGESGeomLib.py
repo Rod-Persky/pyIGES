@@ -1,11 +1,9 @@
-#!python3.3
+#!python3
 # -*- coding: utf-8 -*-
 """
 .. module:: IGES.IGESGeomLib
    :platform: Agnostic, Windows
    :synopsis: Main GUI program
-
-.. requires numpy
 
 .. Created on Sun Mar 31 16:57:00 2013
 .. codeauthor::  Rod Persky <rodney.persky {removethis} AT gmail _DOT_ com>
