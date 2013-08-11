@@ -24,4 +24,4 @@ not show anything - it's more important to show that it's possible to generate b
    :maxdepth: 2
    :glob:
 
-   ../../examples/benchmarks/*/*
+   ../../examples/benchmarks/*/*benchmark*

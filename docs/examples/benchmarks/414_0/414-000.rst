@@ -1,4 +1,0 @@
-Circular Array Subfigure Instance (Pattern) :mod:`414_000` Benchmark
--------------------------
-
-.. automodule:: examples.benchmarks.414_0.414_000

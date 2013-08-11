@@ -1,16 +1,13 @@
-examples Package
-================
+Examples
+=========
 
-:mod:`GeomLib` Module
----------------------
+This section is all about showing how each different type has been used to create some kind of geometry,
+the geometry isn't intended to be sensible - and in some cases methods were simply taken advantage of. The
+format is almost exactly like the benchmarks section however separation was required as the benchmarks
+are indeed important whereas these just show how things can be done.
 
-.. automodule:: examples.GeomLib
-    :members:
-    :show-inheritance:
+.. toctree::
+   :maxdepth: 3
+   :glob:
 
-:mod:`IGESTest` Module
-----------------------
-
-.. automodule:: examples.IGESTest
-    :members:
-    :show-inheritance:
+   ../../examples/benchmarks/*/*example*
