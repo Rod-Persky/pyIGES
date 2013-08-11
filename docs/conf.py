@@ -23,14 +23,15 @@ for key in sys.path:
 extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.todo',
               'sphinx.ext.doctest',
-              'sphinx.ext.mathjax']
+              'sphinx.ext.mathjax',
+              'sphinx.ext.doctest']
 
 todo_include_todos = True
 
 templates_path = ['_themes']
 
 project = 'Python IGES Geometry Library'
-copyright = '%s, Rodney Persky' %time.strftime('%Y')
+copyright = '%s, Rodney Persky' % time.strftime('%Y')
 
 # The short X.Y version.
 version = '0.0'
@@ -38,10 +39,10 @@ version_file = open("../pyIGESVersion", 'r')
 version = version_file.read()
 version_file.close()
 # The full version, including alpha/beta/rc tags.
-release = '%s alpha' %version
+release = '%s alpha' % version
 
 rst_epilog = """
-.. |project| replace:: {project}""".format(project=project)
+.. |project| replace:: {project}""".format(project = project)
 
 # There are two options for replacing |today|: either, you set today to some
 # non-false value, then it is used:
@@ -60,7 +61,7 @@ master_doc = 'index'
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
-exclude_patterns = ['_build', '_uicache']
+exclude_patterns = ['_build', '_uicache', 'examples/benchmarks/benchmark_links.rst']
 
 # The reST default role (used for this markup: `text`) to use for all documents.
 #default_role = None

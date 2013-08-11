@@ -67,7 +67,7 @@ def testrun(filename = "IGESFile.igs"):
 
     for n in range(0, 5):
         for i in range(0, len(bezi[0])):
-            polyln.AddPoint(IGESPoint(bezi[0][i], bezi[1][i]))
+            polyln.AddPoint(IGESPoint(bezi[0][i], bezi[1][i], 10))
         bezi[0] = bezi[0] + 4
 
     system.Commit(polyln)
@@ -75,13 +75,13 @@ def testrun(filename = "IGESFile.igs"):
     line = IGES.IGESGeomLine(IGESPoint(-2, -5, 0), IGESPoint(22, -5, 0))
     system.Commit(line)
 
-    system.Commit(IGES.IGESRevolve(polyln, line))
+    #system.Commit(IGES.IGESRevolve(polyln, line))
 
     #system.Commit(IGES.IGESExtrude(polyln.DirectoryDataPointer.data, IGESPoint(0,0,10)))
 
     system.save(filename)
 
-    if not os.environ.get('READTHEDOCS', None) == 'True':
+    if not environ.get('READTHEDOCS', None) == 'True':
         startfile(filename)
 
 

@@ -79,7 +79,7 @@ class IGESItemData:
         self.FormNumber = int(0)                        # Integer,           2.2.4.4.15 default
         self.EntityLabel = ""                           # String,            2.2.4.4.18 Object Name
         self.EntitySubScript = ""
-        
+
         self.add_extended_data = False                   # Some items seem to needs this whilst other do not
 
         #Compiled items
@@ -88,9 +88,9 @@ class IGESItemData:
 
     def AddParameters(self, data):
         try:
-            self.ParameterData.extend(data)
-        except TypeError:
-            self.ParameterData.extend([data])
+            self.ParameterData.extend(list(data))
+        except Exception as inst:
+            raise TypeError(inst)
 
     def CompileDirectory(self):
         items = [str(self.EntityType),                   # Item 1
@@ -113,8 +113,8 @@ class IGESItemData:
         Line1Template = "{p[0]:>8}{p[1]:>8}{p[2]:>8}{p[3]:>8}{p[4]:>8}{p[5]:>8}{p[6]:>8}{p[7]:>8}{p[8]:>8}"
         Line2Template = "{p[0]:>8}{p[9]:>8}{p[10]:>8}{p[11]:>8}{p[12]:>8}{p[13]:>8}{p[14]:>8}{p[15]:>8}{p[16]:>8}"
 
-        self.CompiledDirectory = [Line1Template.format(p=items)]
-        self.CompiledDirectory.append(Line2Template.format(p=items))
+        self.CompiledDirectory = [Line1Template.format(p = items)]
+        self.CompiledDirectory.append(Line2Template.format(p = items))
 
         return self.CompiledDirectory
 
@@ -122,10 +122,10 @@ class IGESItemData:
         #IGESGlobal is required because we need IGESGlobal.ParameterDelimiterCharacter
         cdata = [self.EntityType.value]
         cdata.extend(self.ParameterData[:])
-        
+
         if self.add_extended_data:
             cdata.extend([0, 0])
-            
+
         self.CompiledParameter, self.ParameterLineCount = IGESCompile.IGESUnaligned(cdata, IGESGlobal, 'P', self.DirectoryDataPointer.data)
         return self.CompiledParameter
 
@@ -218,8 +218,8 @@ class IGESTerminate:
         return "S{:7}G{:7}D{:7}P{:7}{:>41}{:7}".format(
                                             len(self.StartSection._data) + 1,
                                             len(self.GlobalSection._data),
-                                            self.DirectorySection._linecount,
-                                            self.ParameterSection._linecount,
+                                            self.DirectorySection._linecount - 1,
+                                            self.ParameterSection._linecount - 1,
                                             "T", 1)
 
 
@@ -241,7 +241,7 @@ class IGEStorage(IGESTerminate):
         self.ParameterSection.AddLines(IGESObject.CompiledParameter)
         self.DirectorySection.AddLines(IGESObject.CompiledDirectory)
 
-    def save(self, filename='IGESFile.igs'):
+    def save(self, filename = 'IGESFile.igs'):
         try:
             myFile = open(filename, 'w')
             myFile.write(str(self))

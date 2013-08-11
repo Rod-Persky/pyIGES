@@ -10,7 +10,7 @@
 .. Licensed under the Academic Free License ("AFL") v. 3.0
 .. Source at https://github.com/Rod-Persky/pyIGES
 
-
+.. include:: ../benchmark_links.rst
 
 .. figure:: ../144_0/144-000.png
    :scale: 70 %
@@ -19,9 +19,26 @@
    :alt: 142 type
    :align: center
 
-   142 type is a building block for the final 144 surface type, the 142
-   step brings the geometry up to the second point - the trimmed surface.
+   142 type is a building block in |BENCH_144|_.
 
++--------------+-----------------+
+| Stage 2,     | Stage 1,        |
+| |BENCH_142|  | Create Elements |
++==============+=================+
+| |IGES_142|   | |IGES_112|      |
++--------------+-----------------+
+|              | |IGES_100|      |
++--------------+-----------------+
+|              | |IGES_114|      |
++--------------+-----------------+
+
+The 142 combines geometry together. In this example the wave surface is combined with the
+parametric spline curve and circle to generate a profile that is otherwise too difficult to
+create. The use of this type of geometry would be an intersect, where there is two geometric
+items that are basic that need to be combined in some way - e.g a tube through a plate, the
+142 type could remove the plate surface where it physically joins to the tube.
+
+The code to get this up and running and matching existing benchmark code is:
 
 .. literalinclude:: 142_000.py
     :pyobject: iges_142_000
@@ -61,15 +78,28 @@ import examples.benchmarks
 
 
 def iges_142_000():
-    #import pyiges.IGESGeomLib as IGES
+    import pyiges.IGESGeomLib as IGES
     from pyiges.IGESCore import IGEStorage
-    #from pyiges.IGESGeomLib import IGESPoint
+    from pyiges.IGESGeomLib import IGESPoint
     filename = "142-000-benchmark.igs"
 
     system = IGEStorage()
     examples.benchmarks.standard_iges_setup(system, filename)
 
-    # Exactly the same as 144 except for some values and the last surface generation step
+    para_spline_surface = IGES.IGESTestSplineSurf()
+    system.Commit(para_spline_surface)
+
+    circle = IGES.IGESGeomCircle(IGESPoint(6, 7.25, 0), IGESPoint(6.25, 7.25))
+    system.Commit(circle)
+
+    para_spline_curve = IGES.IGESTestSplineCurve()
+    system.Commit(para_spline_curve)
+
+    curve_on_parametric_surface = IGES.IGESCurveOnParametricSurface(para_spline_surface,
+                                                                    circle,
+                                                                    para_spline_curve,
+                                                                    2)
+    system.Commit(curve_on_parametric_surface)
 
     system.save(filename)
 

@@ -26,6 +26,9 @@ class IGESPoint:  # BASIC ITEM, NOT A GEOM ITEM
         self.y = y
         self.z = z
 
+    def __iter__(self):  # Instead of using a if everywhere, make it a list
+        return iter([self.x, self.y, self.z])
+
 
 class IGESGeomPoint(IGESItemData):
     """
@@ -44,11 +47,14 @@ class IGESGeomPoint(IGESItemData):
         self.LineWeightNum = 1
         self.ParameterLC = 1
 
-        if type(node) is not IGESPoint:
-            self.AddParameters([node[0], node[1], node[2], 0])
+        # Ensure that the data is indeed [x, y, z]
+        for correct_length in range(len(list(node)), 3):
+            node.append(0)
 
-        else:
-            self.AddParameters([node.x, node.y, node.z, 0])
+        self.AddParameters(node)
+        self.AddParameters([0])
+
+testpoint = IGESGeomPoint
 
 
 class IGESExtrude(IGESItemData):  # 122
@@ -59,13 +65,23 @@ class IGESExtrude(IGESItemData):  # 122
         # Page 140 "Coordinates of the terminate point"!
         # Given we have the data at this point,
         #  we can just extract the startpoint
-        startpoint = IGESObject.ParameterData[2:5]
 
+        object_type = type(IGESObject)
+
+        if object_type == IGESGeomPolyline:
+            startpoint = IGESObject.ParameterData[2:5]
+
+        elif (object_type == IGESGeomCircle or
+              object_type == IGESGeomArc):
+            startpoint = IGESObject.ParameterData[3:5]
+            startpoint.append(IGESObject.ParameterData[0])
 
         self.AddParameters([IGESObject.DirectoryDataPointer.data,
                             startpoint[0] + Length.x,
                             startpoint[1] + Length.y,
                             startpoint[2] + Length.z])
+
+        #print(startpoint, '+', list(Length), '->', self.ParameterData[1:])
 
 
 class IGESRevolve(IGESItemData):  # 120
@@ -164,23 +180,22 @@ class IGESGeomPolyline(IGESItemData):
     """IGES Simple Closed Planar Curve Entity (Type 106, Form 63)
        Page 86
        123"""
-    def __init__(self, *args):
+    def __init__(self, *IGESPoints):
         IGESItemData.__init__(self)
         self.LineFontPattern.setSolid()
-        self.LineWeightNum = 1
-        self.ParameterLC = 1
 
-        self.EntityType.setCopiousData()
-        self.FormNumber = 63
+        self.EntityType.setClosedPlanarCurve()
+        self.FormNumber = 12
 
         self.pointcount = 0
         self.AddParameters([2, self.pointcount])
 
-        for IGESPoint in args:
-            self.AddPoint(IGESPoint)
+        for Point in IGESPoints:
+            self.AddPoint(Point)
 
-    def AddPoint(self, point):
-        self.AddParameters([point.x, point.y, point.z])
+    def AddPoint(self, Point):
+        self.AddParameters(list(Point))
+
         self.pointcount = self.pointcount + 1
         self.ParameterData[1] = self.pointcount
 
@@ -282,26 +297,35 @@ class IGESCurveOnParametricSurface(IGESItemData):  # Page 193
 
 
 class IGESTrimmedParaSurface(IGESItemData):
-    def __init__(self, trimmed_surface, *IGESClosedProfile):
+    # 4.34 TRIMMED (PARAMETRIC) SURFACE ENTITY (TYPE 144)
+    def __init__(self, trimmed_surface, outer_boundary_surface, *inner_boudary_surface):
         IGESItemData.__init__(self)
         self.EntityType.setTrimmedParaSurface()
         self.FormNumber = 0
 
-        self.type = 1
-        self.sptr = trimmed_surface.DirectoryDataPointer.data
-        self.count_boundaries = 0
+        self.N1 = 1
+        self.count_boundaries = 0  # N2
 
-        self.AddParameters([self.type, self.sptr, self.count_boundaries])
+        try:
+            outer_boundary_surface = outer_boundary_surface.DirectoryDataPointer.data
+        except:
+            pass
 
-        for profile in IGESClosedProfile:
+        self.AddParameters([trimmed_surface.DirectoryDataPointer.data,
+                            self.N1,
+                            self.count_boundaries,
+                            outer_boundary_surface])
+
+        for profile in inner_boudary_surface:
             self.add_bounding_profile(profile)
 
-    def add_bounding_profile(self, IGESClosedProfile):
-        if type(IGESClosedProfile) is not int:
-            self.AddParameters([IGESClosedProfile.DirectoryDataPointer.data])
+    def add_bounding_profile(self, inner_boudary_surface):
+        if type(inner_boudary_surface) is not int:
+            self.AddParameters([inner_boudary_surface.DirectoryDataPointer.data])
         else:
-            self.AddParameters([IGESClosedProfile])
-        #self.count_boundaries = self.count_boundaries + 1
+            self.AddParameters([inner_boudary_surface])
+
+        self.count_boundaries = self.count_boundaries + 1
         self.ParameterData[2] = self.count_boundaries
 
 
@@ -379,9 +403,6 @@ class IGESGroup(IGESItemData):
             self.ParameterData[2] = self.entities_count
 
 
-
-
-
 class IGESTestSplineCurve(IGESItemData):
     def __init__(self):
         IGESItemData.__init__(self)
@@ -427,8 +448,7 @@ class IGESTestSplineSurf(IGESItemData):
         #self.AddParameters([self.number_of_u_segments,
         #                    self.number_of_v_segments])
 
-        self.AddParameters([
-                            3, 1, 1, 3, 0., 1., 0., 1., 2., 3., 6.5, 0., 0., 0., -0.166666, 8.583070000000001E-006,
+        self.AddParameters([3, 1, 1, 3, 0., 1., 0., 1., 2., 3., 6.5, 0., 0., 0., -0.166666, 8.583070000000001E-006,
                             - 1.287460000000000E-005, 4.291530000000000E-006, -1.430510000000000E-006, -1.502040000000000E-005,
                             2.253060000000000E-005, -7.510190000000000E-006, -0.0833325, 6.437300000000000E-006, -9.655950000000000E-006,
                             3.218650000000000E-006, 7.5, -0.75, 0., 0., -0.0999956, 4.291530000000000E-006, -4.291530000000000E-006, 0.,
@@ -480,3 +500,32 @@ class IGESTestSplineSurf(IGESItemData):
                             8.583070000000001E-006, 1.20001, -1.287460000000000E-005, 3.862380000000000E-005, -2.574920000000000E-005,
                             - 0.800005, 8.583070000000001E-006, -2.574920000000000E-005, 1.716610000000000E-005, 0., -1., 3., -2., 0., 0.,
                             0., 0., 0., 0., 0., 0., 0., 0., 0., 0.])
+
+
+#===============================================================================
+#  TESTING
+#===============================================================================
+
+import unittest
+
+
+class test_IGESGeomPoint(unittest.TestCase):
+    def using_IGESPoint(self):
+        point = IGESGeomPoint(IGESPoint(1, 2, 3))  # correct usage
+        assert point.ParameterData == [1, 2, 3, 0], 'IGESGeomPoint convert from IGESPoint fail'
+
+    def using_List(self):
+        point = IGESGeomPoint([1, 2, 3])  # correct length but is a list
+        assert point.ParameterData == [1, 2, 3, 0], 'IGESGeomPoint convert from [x, y, z] list fail'
+
+    def using_XYList(self):
+        point = IGESGeomPoint([1, 2])  # incorrect length
+        assert point.ParameterData == [1, 2, 0, 0], 'IGESGeomPoint convert from [x, y] list fail'
+
+
+class test_IGESGeomCircle(unittest.TestCase):
+    def using_int_Radius(self):
+        circle = IGESGeomCircle(IGESPoint(5, 5, 0), 5)
+
+    def using_IGESPoint_radius(self):
+        circle = IGESGeomCircle(IGESPoint(0, 0, 0), IGESPoint(5, 5, 0))

@@ -23,15 +23,15 @@ except:
     import os
     if os.environ.get('READTHEDOCS', None) == 'True':
         import mock
-        numpy = mock.Mock(return_value=None)
-        scipy = mock.Mock(return_value=None)
+        numpy = mock.Mock(return_value = None)
+        scipy = mock.Mock(return_value = None)
 
 
 def bernstein_poly(n, i, u):
     return comb(n, i) * u ** (i) * (1 - u) ** (n - i)
 
 
-def bezier_curve(P, nTimes=1000, dC=False):
+def bezier_curve(P, nTimes = 1000, dC = False):
 
     n = len(P[1])
     u = numpy.linspace(0.0, 1.0, nTimes)
@@ -40,4 +40,4 @@ def bezier_curve(P, nTimes=1000, dC=False):
     for i in range(0, n):
         polynomial_array[i] = bernstein_poly(n - 1, i, u)
 
-    return np.dot(P, polynomial_array)
+    return numpy.dot(P, polynomial_array)

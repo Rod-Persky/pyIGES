@@ -10,6 +10,7 @@
 .. Licensed under the Academic Free License ("AFL") v. 3.0
 .. Source at https://github.com/Rod-Persky/pyIGES
 
+.. include:: ../benchmark_links.rst
 
 .. figure:: 144-000.png
    :scale: 70 %
@@ -18,7 +19,18 @@
    :alt: 144 type
    :align: center
 
-   144 Type construction, Final Surface, Trimmed Surface, Constituent Parts
+   144 Type construction, See table below
+
++------------------+--------------+-----------------+
+| Stage 3,         | Stage 2,     | Stage 1,        |
+| Generate Surface | |BENCH_142|_ | Create Elements |
++==================+==============+=================+
+| |IGES_144|       | |IGES_142|   | |IGES_112|      |
++------------------+--------------+-----------------+
+|                  |              | |IGES_100|      |
++------------------+--------------+-----------------+
+|                  |              | |IGES_114|      |
++------------------+--------------+-----------------+
 
 .. ToDo:: Figure out how this works.
 
