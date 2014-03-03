@@ -1,12 +1,16 @@
 language: python
-
 python:
-  - 3.2
-  - 3.3
-
-install: "sudo apt-get -qq install python3-numpy python3-scipy"
-  
+- 3.2
+- 3.3
+install: sudo apt-get -qq install python3-numpy python3-scipy
 script:
-  - python setup.py clean
-  - python setup.py build_ext --inplace
-  - python setup.py install
+- python setup.py clean
+- python setup.py build_ext --inplace
+- python setup.py install
+deploy:
+  provider: pypi
+  user: Rodney.Persky
+  password:
+    secure: Uxa1n3eKoNSy67q1o0ZCr4WQPj4BbUvcNDY+TqinWstQNySEN+WtcFkPCHEEGW7klviAxB/vVIeoiNewSa7PYDIo1By1VLR2XsJPgznTiruXyLNu4XOFDMfDpQCmkrZ4GnjghDqmXwqzUQUwopMPD5mMCHc+M1gUvuY4zWst4hI=
+  on:
+    repo: Rod-Persky/pyIGES
