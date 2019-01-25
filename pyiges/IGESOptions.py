@@ -1,4 +1,4 @@
-#!python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #@PydevCodeAnalysisIgnore
 """
@@ -137,4 +137,4 @@ class IGESStatusNumber:
         self.Hierachy = IGESHierachy()
 
     def __str__(self):
-        return "{:0>2}{:0>2}{:0>2}{:0>2}".format(self.Visablilty, self.Subordinate, self.EntityUseFlag, self.Hierachy)
+        return "{:0>2}{:0>2}{:0>2}{:0>2}".format(self.Visablilty.value, self.Subordinate.value, self.EntityUseFlag.value, self.Hierachy.value)

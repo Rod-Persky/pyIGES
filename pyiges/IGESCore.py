@@ -1,4 +1,4 @@
-#!python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 .. module:: IGES.IGESCore
@@ -93,10 +93,10 @@ class IGESItemData:
             raise TypeError(inst)
 
     def CompileDirectory(self):
-        items = [str(self.EntityType),                   # Item 1
-                 self.ParameterDataPointer,              # Item 2
+        items = [self.EntityType.getValue(),             # Item 1
+                 self.ParameterDataPointer.data,         # Item 2
                  self.Structure,                         # Item 3
-                 str(self.LineFontPattern),              # Item 4
+                 self.LineFontPattern.getValue(),        # Item 4
                  self.Level,                             # Item 5
                  self.View,                              # Item 6
                  self.TransfrmMat,                       # Item 7

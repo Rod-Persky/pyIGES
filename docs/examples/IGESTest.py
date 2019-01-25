@@ -1,4 +1,4 @@
-#!python3.3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 .. module:: examples.IGESTest
@@ -8,7 +8,7 @@
 .. requires numpy, os (startfile)
 
 .. Created on Tue Apr  2 18:33:27 2013
-.. codeauthor::  Rod Persky <rodney.persky {removethis} AT gmail _DOT_ com>
+.. codeauthor::  Rod Persky <rodney.popersky {removethis} AT gmail _DOT_ com>
 .. Licensed under the Academic Free License ("AFL") v. 3.0
 .. Source at https://github.com/Rod-Persky/pyIGES
 """
@@ -28,7 +28,7 @@ except:
 from pyiges.IGESCore import IGEStorage
 from pyiges.IGESGeomLib import IGESPoint
 import pyiges.IGESGeomLib as IGES
-from examples.GeomLib import bezier_curve
+from GeomLib import bezier_curve
 
 
 def testrun(filename = "IGESFile.igs"):
@@ -75,15 +75,15 @@ def testrun(filename = "IGESFile.igs"):
     line = IGES.IGESGeomLine(IGESPoint(-2, -5, 0), IGESPoint(22, -5, 0))
     system.Commit(line)
 
-    #system.Commit(IGES.IGESRevolve(polyln, line))
+    system.Commit(IGES.IGESRevolve(polyln, line))
 
     #system.Commit(IGES.IGESExtrude(polyln.DirectoryDataPointer.data, IGESPoint(0,0,10)))
     print(system)
 
     system.save(filename)
 
-    if not environ.get('READTHEDOCS', None) == 'True':
-        startfile(filename)
+    # if not environ.get('READTHEDOCS', None) == 'True':
+    #     startfile(filename)
 
 
 if __name__ == '__main__':
