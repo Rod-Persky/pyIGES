@@ -144,7 +144,7 @@ class IGESGeomCircle(IGESItemData):
     Extension :py:class:`~pyiges.IGESGeomLib.IGESGeomArc` (Type 110, Form 0).
     Draw a simple circle constrained on the x plane."""
     def __init__(self, node, radius):
-        if type(node) is not IGESPoint:
+        if type(radius) is not IGESPoint:
             radius = IGESPoint(node.x + radius, node.y, node.z)
 
         IGESGeomArc.__init__(self, node.z, node, radius, radius)
