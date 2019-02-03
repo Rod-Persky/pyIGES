@@ -1,3 +1,4 @@
+__pycache__/
 *.py[cod]
 pyiges/*/*.igs
 *benchmark.igs
@@ -36,3 +37,15 @@ nosetests.xml
 
 # Mr Developer
 .mr.developer.cfg
+
+# Sphinx documentation
+docs/_build/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Eclipse and pydev settings
+.project
+.pydevproject
+.settings/
