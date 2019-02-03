@@ -1,4 +1,4 @@
-#!python3.3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 '''
 .. module:: examples.benchmarks.142_000
@@ -43,7 +43,7 @@ The code to get this up and running and matching existing benchmark code is:
 .. literalinclude:: 142_000.py
     :pyobject: iges_142_000
     :linenos:
-    :emphasize-lines: 43-47
+    :emphasize-lines: 9-21
 
 The resulting IGES file should look like:
 

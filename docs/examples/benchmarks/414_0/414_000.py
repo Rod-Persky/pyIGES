@@ -1,6 +1,4 @@
-#!python3.3
-# -*- coding: utf-8 -*-
-#!python3.3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 '''
 .. module:: examples.benchmarks.414_000
