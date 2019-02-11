@@ -22,7 +22,7 @@ Depends On
 There are few dependencies in this library, these are
 
 - Python 3.3.x (latest, x64)
-- `Numpy (latest, preferably with MKL) <http://www.lfd.uci.edu/~gohlke/pythonlibs/#numpy>`_
-- `SciPy (latest, preferably with MKL) <http://www.lfd.uci.edu/~gohlke/pythonlibs/#scipy>`_
+- `Numpy (latest, preferably with MKL) <https://www.numpy.org/>`_
+- `SciPy (latest, preferably with MKL) <https://www.scipy.org/>`_
 
 The numpy and scipy packages are used in conjunction with the 'demo' geometry library.

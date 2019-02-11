@@ -1,4 +1,4 @@
-#!python3.3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 '''
 Created on 05/08/2013
@@ -11,4 +11,3 @@ if __name__ == "__main__":
     os.system("py setup.py bdist upload")
     os.system("py setup.py bdist --plat-name=win32 --format=wininst upload")
     os.system("py setup.py sdist upload")
-

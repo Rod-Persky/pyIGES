@@ -1,2 +1,4 @@
 include README.md
+include LICENCE.txt
 include pyIGESVersion
+include pyiges/IGESUserSettings.ini
