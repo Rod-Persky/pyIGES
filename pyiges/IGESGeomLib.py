@@ -118,8 +118,6 @@ class IGESExtrude(IGESItemData):
                             startpoint[1] + length.y,
                             startpoint[2] + length.z])
 
-        #print(startpoint, '+', list(length), '->', self.ParameterData[1:])
-
 
 class IGESRevolve(IGESItemData):  # 120
     """Revolve GEOM object around a centerline
@@ -163,25 +161,6 @@ class IGESGeomLine(IGESItemData):
 
         self.AddParameters([startpoint.x, startpoint.y, startpoint.z,
                             endpoint.x, endpoint.y, endpoint.z])
-
-
-#===============================================================================
-# class IGESCentLinePt(IGESGeomLine):
-#     def __init__(self, node, theta, length):
-#
-#         xoffset = length * 0.5 * np.cos(theta)
-#         yoffset = length * 0.5 * np.sin(theta)
-#
-#         startpoint = IGESPoint(node.x + xoffset, node.y + yoffset)
-#         endpoint = IGESPoint(node.x - xoffset, node.y - yoffset)
-#
-#         startpoint.x = np.around(startpoint.x, 7)
-#         startpoint.y = np.around(startpoint.y, 7)
-#         endpoint.x = np.around(endpoint.x, 7)
-#         endpoint.y = np.around(endpoint.y, 7)
-#
-#         IGESGeomLine.__init__(self, startpoint, endpoint)
-#===============================================================================
 
 
 class IGESGeomArc(IGESItemData):  # Wrapper of iges geometry
@@ -302,47 +281,29 @@ class IGESGeomPolyline(IGESItemData):
         self.ParameterData[1] = self.pointcount
 
 
-class IGESGeomCompositeCurve(IGESItemData):  # 102
+class IGESGeomCompositeCurve(IGESItemData):
+    OBJECT_COUNT_INDEX = 0
+
+    """IGES Composite Curve (Type 102, Form 0). A continuous after grouping stituent  entities  into  a  logical  unit.
+
+    :param *args: List of geometry objects for grouping
+    :type *args: :py:class:`~pyiges.IGESGeomLib.IGESItemData`
+    """
     def __init__(self, *args):
         IGESItemData.__init__(self)
         self.EntityType.setCompositeCurve()
         self.FormNumber = 0
 
         self.object_count = 0
-        self.AddParameters(self.object_count)
+        self.AddParameters([self.object_count])
 
         for IGESObject in args:
             self.AddObject(IGESObject)
 
     def AddObject(self, IGESObject):
         self.object_count = self.object_count + 1
-        self.AddParameters(IGESObject.DirectoryDataPointer.data)
-        self.ParameterData[1] = self.object_count
-
-
-#===============================================================================
-# class IGESGeomPlaneaaaa(IGESItemData):
-#     def __init__(self):
-#         IGESItemData.__init__(self)
-#         self.EntityType.setClosedPlanarCurve()
-#         self.FormNumber = 63
-#
-#         self.AddParameters([2])  # Page 115, x, y, z
-#
-#         self.pointcount = 0
-#         self.AddParameters([self.pointcount])
-#
-#         self.AddParameters([0])
-#
-#     def AddPoint(self, *args):
-#         """Add surface bounding point
-#         *args is IGESPoint"""
-#
-#         for IGESPoint in args:
-#             self.AddParameters([IGESPoint.x, IGESPoint.y, IGESPoint.z])
-#             self.pointcount = self.pointcount + 1
-#             self.ParameterData[1] = self.pointcount
-#===============================================================================
+        self.AddParameters([IGESObject.DirectoryDataPointer.data])
+        self.ParameterData[IGESGeomCompositeCurve.OBJECT_COUNT_INDEX] = self.object_count
 
 
 class IGESGeomPlane(IGESItemData):
@@ -360,19 +321,6 @@ class IGESGeomPlane(IGESItemData):
         self.FormNumber = -1
 
 
-#===============================================================================
-# class IGESCurveOnParametricSurface(IGESItemData):
-#     """
-#     142, Curve on a Parametric Surface Entity, Page 162"""
-#     def __init__(self, *args):
-#         IGESItemData.__init__(self)
-#         self.EntityType.setCurveOnParaSurface()
-#         self.FormNumber = 0
-#
-#         self.AddParameters(args)
-#===============================================================================
-
-
 class IGESCurveOnParametricSurface(IGESItemData):  # Page 193
     def __init__(self, IGESSurfaceS, IGESSurfaceB, IGESSurfaceC, pref):
         IGESItemData.__init__(self)
@@ -385,17 +333,6 @@ class IGESCurveOnParametricSurface(IGESItemData):  # Page 193
                             IGESSurfaceB.DirectoryDataPointer.data,
                             IGESSurfaceC.DirectoryDataPointer.data])
         self.AddParameters([pref])  # C is preferred
-
-#class IGESTrimmedParaSurface(IGESItemData):
-#    def __init__(self, *args):
-#        """
-#        144, Trimmed (Parametric) Surface Entity, Page 166
-#        """
-#        IGESItemData.__init__(self)
-#        self.EntityType.setTrimmedParaSurface()
-#       self.FormNumber = 0
-
-#        self.AddParameters(args)
 
 
 class IGESTrimmedParaSurface(IGESItemData):
@@ -434,16 +371,50 @@ class IGESTrimmedParaSurface(IGESItemData):
 class IGESGeomTransform(IGESItemData):
     """ Transform / Move Geometry"""
 
-    def __init__(self, transform_matrix):
+    def __init__(self, transform_matrix, formNumber=0):
         IGESItemData.__init__(self)
         self.EntityType.setTransformMatrix()
-        self.FormNumber = 0
+        self.FormNumber = formNumber
 
-        if len(transform_matrix) == 9:
-            self.AddParameters(transform_matrix)
+        if self.FormNumber == 0:
+            if len(transform_matrix) == 9:
+                self.AddParameters(transform_matrix)
+            else:
+                raise TypeError("for form 0 a transform matrix is 9 numbers")
         else:
-            raise TypeError("A transform matrix is 9 numbers")
+            if len(transform_matrix) == 12:
+                self.AddParameters(transform_matrix)
+            else:
+                raise TypeError("for form 1 a transform matrix is 12 numbers")
 
+
+class IGESDrawingEntity(IGESItemData):
+    """DrawingEntity"""
+
+    def __init__(self, parameters, formNumber=0):
+        IGESItemData.__init__(self)
+        self.EntityType.setDrawingEntity()
+        self.FormNumber = formNumber
+        self.AddParameters(parameters)
+
+
+class IGESViewEntity(IGESItemData):
+    """ViewEntity"""
+
+    def __init__(self, parameters):
+        IGESItemData.__init__(self)
+        self.EntityType.setViewEntity()
+        self.FormNumber = 0
+        self.AddParameters(parameters)
+
+class IGESPropertyEntity(IGESItemData):
+    """PropertyEntity"""
+
+    def __init__(self, parameters, formNumber=0):
+        IGESItemData.__init__(self)
+        self.EntityType.setPropertyEntity()
+        self.FormNumber = formNumber
+        self.AddParameters(parameters)
 
 class IGESCircularArray(IGESItemData): # 414
     """IGES Circular Array (Type 414, Form 0). Duplicate a form or group in a circle.
@@ -589,6 +560,46 @@ class IGESSplineCurve(IGESItemData):
         self._nextBreakpointInsert += 1
         self.ParameterData.extend(polynominal)
 
+#===============================================================================
+# class IGESCentLinePt(IGESGeomLine):
+#     def __init__(self, node, theta, length):
+#
+#         xoffset = length * 0.5 * np.cos(theta)
+#         yoffset = length * 0.5 * np.sin(theta)
+#
+#         startpoint = IGESPoint(node.x + xoffset, node.y + yoffset)
+#         endpoint = IGESPoint(node.x - xoffset, node.y - yoffset)
+#
+#         startpoint.x = np.around(startpoint.x, 7)
+#         startpoint.y = np.around(startpoint.y, 7)
+#         endpoint.x = np.around(endpoint.x, 7)
+#         endpoint.y = np.around(endpoint.y, 7)
+#
+#         IGESGeomLine.__init__(self, startpoint, endpoint)
+#===============================================================================
+#===============================================================================
+# class IGESGeomPlaneaaaa(IGESItemData):
+#     def __init__(self):
+#         IGESItemData.__init__(self)
+#         self.EntityType.setClosedPlanarCurve()
+#         self.FormNumber = 63
+#
+#         self.AddParameters([2])  # Page 115, x, y, z
+#
+#         self.pointcount = 0
+#         self.AddParameters([self.pointcount])
+#
+#         self.AddParameters([0])
+#
+#     def AddPoint(self, *args):
+#         """Add surface bounding point
+#         *args is IGESPoint"""
+#
+#         for IGESPoint in args:
+#             self.AddParameters([IGESPoint.x, IGESPoint.y, IGESPoint.z])
+#             self.pointcount = self.pointcount + 1
+#             self.ParameterData[1] = self.pointcount
+#===============================================================================
 
 class IGESTestSplineSurf(IGESItemData):
     def __init__(self):

@@ -76,16 +76,19 @@ class IGESEntityTypeNumber(IGESParameter):
     def setSphericalSurf(self):        self.value = 196
     def setToroidSurf(self):           self.value = 198
     def setSubfigureInstance(self):    self.value = 308
+    def setDrawingEntity(self):        self.value = 404
+    def setPropertyEntity(self):       self.value = 406
+    def setViewEntity(self):           self.value = 410
     def setCircularArray(self):        self.value = 414
 
 
 class IGESLineFontPattern(IGESParameter):
-    def setNone(self):      self.value = 0
-    def setSolid(self):     self.value = 1
-    def setDashed(self):    self.value = 2
-    def setPhantom(self):   self.value = 3
+    def setNone(self):       self.value = 0
+    def setSolid(self):      self.value = 1
+    def setDashed(self):     self.value = 2
+    def setPhantom(self):    self.value = 3
     def setCenterline(self): self.value = 4
-    def setDotted(self):    self.value = 5
+    def setDotted(self):     self.value = 5
 
 
 class IGESColorNumber(IGESParameter):
@@ -106,10 +109,10 @@ class IGESBlankStatus(IGESParameter):
 
 
 class IGESubordinate(IGESParameter):
-    def setIndependent(self): self.value = 0
+    def setIndependent(self):         self.value = 0
     def setPhysicallyDependent(self): self.value = 1
-    def setLogicallyDependent(self): self.value = 2
-    def setPysANDLogDependent(self): self.value = 3
+    def setLogicallyDependent(self):  self.value = 2
+    def setPysANDLogDependent(self):  self.value = 3
 
 
 class IGESEntityUseFlag(IGESParameter):
