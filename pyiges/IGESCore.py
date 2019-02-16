@@ -34,7 +34,7 @@ class IGESectionFunctions:
         return IGESPointer(self._linecount)
 
     def __str__(self):
-        return IGESCompile.format_line(self._data, self.LetterCode)
+        return IGESCompile.format_line(self._data, self.LetterCode).rstrip()
 
     def AddLines(self, lines):
         self._linecount = self._linecount + len(lines)
@@ -244,7 +244,13 @@ class IGEStorage(IGESTerminate):
     def save(self, filename = 'IGESFile.igs'):
         try:
             myFile = open(filename, 'w')
-            myFile.write(str(self))
+            #myFile.write(str(self))
+            myFile.write(str(self.StartSection))
+            myFile.write(str(self.GlobalSection))
+            myFile.write(str(self.DirectorySection))
+            myFile.write(str(self.ParameterSection))
+            myFile.write(str("\n"))
+            myFile.write(str(self.IGESTerminate()))
             myFile.close()
             print("\n\nSuccessfuly wrote:", filename)
         except:
@@ -252,9 +258,9 @@ class IGEStorage(IGESTerminate):
 
     def __str__(self):
         out = str(self.StartSection)
-        out = "".join([out, str(self.GlobalSection), ""])
-        out = "".join([out, str(self.DirectorySection), ""])
-        out = "".join([out, str(self.ParameterSection), "\n"])
+        out = "".join([out, str(self.GlobalSection)])
+        out = "".join([out, str(self.DirectorySection)])
+        out = "".join([out, str(self.ParameterSection)])
         out = "".join([out, self.IGESTerminate()])
         return out
 
