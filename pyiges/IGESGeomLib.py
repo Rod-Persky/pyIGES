@@ -5,6 +5,8 @@
    :platform: Agnostic, Windows
    :synopsis: Main GUI program
 
+.. requires math (pi)
+
 .. Created on Sun Mar 31 16:57:00 2013
 .. codeauthor::  Rod Persky <rodney.persky {removethis} AT gmail _DOT_ com>
 .. Licensed under the Academic Free License ("AFL") v. 3.0
@@ -19,6 +21,18 @@ from pyiges.IGESCore import IGESItemData
 
 
 class IGESPoint:  # BASIC ITEM, NOT A GEOM ITEM
+    """BASIC ITEM, NOT A GEOM ITEM
+    Base class for coordinate
+
+    :param x: distance to origin in x dirrection
+    :type x: int or float
+
+    :param x: distance to origin in y dirrection
+    :type x: int or float
+
+    :param y: distance to origin in z dirrection
+    :type y: int or float
+    """
     def __init__(self, x, y, z = 0):
         self.x = x
         self.y = y
@@ -27,17 +41,35 @@ class IGESPoint:  # BASIC ITEM, NOT A GEOM ITEM
     def __iter__(self):  # Instead of using a if everywhere, make it a list
         return iter([self.x, self.y, self.z])
 
+class IGESVector:
+    """BASIC ITEM, NOT A GEOM ITEM
+    Base class for transformations
+
+    :param i: length of vector in x dirrection
+    :type i: int or float
+
+    :param j: length of vector in y dirrection
+    :type j: int or float
+
+    :param k: length of vector in z dirrection
+    :type k: int or float
+    """
+    def __init__(self, i, j, k):
+        self.i = i
+        self.j = j
+        self.k = k
+
+    def __iter__(self):
+        return iter([self.i, self.j, self.k])
+
 
 class IGESGeomPoint(IGESItemData):
     """
-    :param node: Center point of the circle
+    point in 3D space
+
+    :param node: position of point as IGESPoint or list
     :type geometry: :py:class:`~pyiges.IGESGeomLib.IGESPoint` or [x, y, z]
-
-    :param radius: Radius of the circle to be drawn either
-    :type radius: :py:class:`~pyiges.IGESGeomLib.IGESPoint`, int or float
-
-    Extension :py:class:`~pyiges.IGESGeomLib.IGESGeomArc` (Type 110, Form 0).
-    Draw a simple circle constrained on the x plane."""
+    """
     def __init__(self, node):
         IGESItemData.__init__(self)
         self.EntityType.setPoint()
@@ -52,11 +84,18 @@ class IGESGeomPoint(IGESItemData):
         self.AddParameters(node)
         self.AddParameters([0])
 
-testpoint = IGESGeomPoint
 
+class IGESExtrude(IGESItemData):
+    """
+    extrude line segment to end point
+    entity type 122
 
-class IGESExtrude(IGESItemData):  # 122
-    def __init__(self, IGESObject, Length):
+    :param IGESObject: object wich sould be extruded
+
+    :param length: end point of extrusion
+    :type length: :py:class:`~pyiges.IGESGeomLib.IGESPoint`
+    """
+    def __init__(self, IGESObject, length):
         IGESItemData.__init__(self)
         self.EntityType.setTabulatedCylinder()
 
@@ -75,14 +114,29 @@ class IGESExtrude(IGESItemData):  # 122
             startpoint.append(IGESObject.ParameterData[0])
 
         self.AddParameters([IGESObject.DirectoryDataPointer.data,
-                            startpoint[0] + Length.x,
-                            startpoint[1] + Length.y,
-                            startpoint[2] + Length.z])
+                            startpoint[0] + length.x,
+                            startpoint[1] + length.y,
+                            startpoint[2] + length.z])
 
-        #print(startpoint, '+', list(Length), '->', self.ParameterData[1:])
+        #print(startpoint, '+', list(length), '->', self.ParameterData[1:])
 
 
 class IGESRevolve(IGESItemData):  # 120
+    """Revolve GEOM object around a centerline
+    entity type 120
+
+    :param profile: object wich sould be rotated
+    :type profile:
+
+    :param center_line: line segment to rotate around
+    :type center_line: :py:class:`~pyiges.IGESGeomLib.IGESGeomLine`
+
+    :param start_angle: starting angle of roation in _radians_, default is 0
+    :type start_angle: int or float
+
+    :param terminate_angle: starting angle of roation in _radians_, default is two pi
+    :type terminate_angle: int or float
+    """
     def __init__(self, profile, center_line, start_angle = 0, terminate_angle = pi * 2):
         IGESItemData.__init__(self)
         self.EntityType.setRevolvedSurface()
@@ -93,7 +147,16 @@ class IGESRevolve(IGESItemData):  # 120
                             terminate_angle])
 
 
-class IGESGeomLine(IGESItemData):  # 116
+class IGESGeomLine(IGESItemData):
+    """A straight line between two points
+    entity type 116
+
+    :param startpoint: start of line
+    :type startpoint: :py:class:`~pyiges.IGESGeomLib.IGESPoint`
+
+    :param endpoint: send of line
+    :type endpoint: :py:class:`~pyiges.IGESGeomLib.IGESPoint`
+    """
     def __init__(self, startpoint, endpoint):
         IGESItemData.__init__(self)
         self.EntityType.setLine()
@@ -122,6 +185,21 @@ class IGESGeomLine(IGESItemData):  # 116
 
 
 class IGESGeomArc(IGESItemData):  # Wrapper of iges geometry
+    """Cirular arc in in xy plane
+    entity type 100
+
+    :param z: z value of xy plane
+    :type z: int or float
+
+    :param node: center point of arc, z value is ignored
+    :type node: :py:class:`~pyiges.IGESGeomLib.IGESPoint`
+
+    :param startpoint: start point of arc, z value is ignored
+    :type startpoint: :py:class:`~pyiges.IGESGeomLib.IGESPoint`
+
+    :param endpoint: end point of arc, z value is ignored
+    :type endpoint: :py:class:`~pyiges.IGESGeomLib.IGESPoint`
+    """
     def __init__(self, z, node, startpoint, endpoint):
         IGESItemData.__init__(self)
         self.LineFontPattern.setSolid()
@@ -134,15 +212,15 @@ class IGESGeomArc(IGESItemData):  # Wrapper of iges geometry
 
 
 class IGESGeomCircle(IGESItemData):
-    """
+    """Draw a simple circle constrained on the x plane.
+    Extension :py:class:`~pyiges.IGESGeomLib.IGESGeomArc` (Type 110, Form 0)
+
     :param node: Center point of the circle
-    :type geometry: :py:class:`~pyiges.IGESGeomLib.IGESPoint`
+    :type node: :py:class:`~pyiges.IGESGeomLib.IGESPoint`
 
     :param radius: Radius of the circle to be drawn either
-    :type radius: :py:class:`~pyiges.IGESGeomLib.IGESPoint`, int or float
-
-    Extension :py:class:`~pyiges.IGESGeomLib.IGESGeomArc` (Type 110, Form 0).
-    Draw a simple circle constrained on the x plane."""
+    :type radius: int or float
+    """
     def __init__(self, node, radius):
         if type(radius) is not IGESPoint:
             radius = IGESPoint(node.x + radius, node.y, node.z)
@@ -151,6 +229,22 @@ class IGESGeomCircle(IGESItemData):
 
 
 class IGESGeomTorus(IGESItemData):
+    """Torus
+    UNTESTED!
+    entity type 160
+
+    :param r1: radius from center to center of ring
+    :type r1: int or float
+
+    :param r2: radius of ring
+    :type r2: int or float
+
+    :param node: center point
+    :type node: :py:class:`~pyiges.IGESGeomLib.IGESPoint`
+
+    :param vector: normal vector through center point (axis of rotation)
+    :type vector: :py:class:`~pyiges.IGESGeomLib.IGESVector`
+    """
     def __init__(self, r1, r2, node, vector):
         IGESItemData.__init__(self)
         self.LineFontPattern.setSolid()
@@ -159,10 +253,20 @@ class IGESGeomTorus(IGESItemData):
 
         self.EntityType.setTorus()
 
-        self.AddParameters([r1, r2, node.x, node.y, node.z, vector.x, vector.y, vector.z])
+        self.AddParameters([r1, r2, node.x, node.y, node.z, vector.i, vector.j, vector.k])
 
 
 class IGESGeomSphere(IGESItemData):
+    """Sphere
+    UNTESTED!
+    entity type 158
+
+    :param radius: radius of the sphere
+    :type radius: int or float
+
+    :param node: center point
+    :type node: :py:class:`~pyiges.IGESGeomLib.IGESPoint`
+    """
     def __init__(self, radius, node):
         IGESItemData.__init__(self)
         self.LineFontPattern.setSolid()
@@ -342,12 +446,13 @@ class IGESGeomTransform(IGESItemData):
 
 
 class IGESCircularArray(IGESItemData): # 414
-    """
-    :param geometry: Geometry that is to be put into a circular array
-    :type geometry: :py:class:`~pyiges.IGESGeomLib.IGESGroup` or IGES Object
+    """IGES Circular Array (Type 414, Form 0). Duplicate a form or group in a circle.
+    See :py:mod:`examples.benchmarks.414_0.414_000` for how this function works.
 
-    :param int number: Number of occurance there should be of the geometry,
-                   starting from 1.
+    :param geometry: Geometry that is to be put into a circular array
+    :type geometry: :py:class:`~pyiges.IGESGeomLib.IGESGroup` or IGESObject
+
+    :param int number: Number of occurance there should be of the geometry, starting from 1.
 
     :param center: The node that rotation is done about
     :type center: :py:class:`~pyiges.IGESGeomLib.IGESPoint`
@@ -355,14 +460,12 @@ class IGESCircularArray(IGESItemData): # 414
     :param radius: Radius of the circle the objects are inscribed about
     :type radius: int or float
 
-    :param start_angle: Int/Float andle in _radians_ of the starting point
+    :param start_angle: angle in _radians_ of the starting point
     :type start_angle: int or float
 
-    :param delta_angle: Int/Float angle across which the objects are distributed
+    :param delta_angle: angle across which the objects are distributed
     :type delta_angle: int or float
-
-    IGES Circular Array (Type 414, Form 0). Duplicate a form or group in a circle.
-    See :py:mod:`examples.benchmarks.414_0.414_000` for how this function works."""
+    """
     def __init__(self, geometry, number, center,
                  radius, start_angle, delta_angle):
         IGESItemData.__init__(self)
@@ -400,6 +503,44 @@ class IGESGroup(IGESItemData):
             self.entities_count = self.entities_count + 1
             self.ParameterData[2] = self.entities_count
 
+
+class IGESRationalBSplineSurface(IGESItemData):
+    def __init__(self, node1, node2, node3, node4):
+        IGESItemData.__init__(self)
+        self.LineFontPattern.setSolid()
+        self.LineWeightNum = 1
+        # self.ParameterLC = 4
+        self.FormNumber = 0
+
+        self.EntityType.setRBSplineSurface() # 128
+
+        K1 = 1 # Upper index of first sum
+        K2 = 1 # Upper index of second sum
+        M1 = 1 # Degree of first set of basis functions
+        M2 = 1 # Degree of second set of basis functions
+        prop1 = 0 # PROP1 Not closed
+        prop2 = 0 # PROP2 Not closed
+        prop3 = 1 # PROP3 Polynomial
+        prop4 = 0 # PROP4 Non-periodic in first parametric variable direction
+        prop5 = 0 # PROP5 Non-periodic in second parametric variable direction
+
+        # N1 = 1+K1-M1
+        # N2 = 1+K2-M2
+        # A = N1+2*M1
+        # B = N2+2*M2
+        # C = (1+K1)*(1+K2)
+
+        self.AddParameters([K1, K2, M1, M2, prop1, prop2, prop3, prop4, prop5,
+            0.0, 0.0, 1.0, 1.0,
+            0.0, 0.0, 1.0, 1.0,
+            1.0, 1.0, 1.0, 1.0,
+            node1.x, node1.y, node1.z, node2.x, node2.y, node2.z,
+            node3.x, node3.y, node3.z, node4.x, node4.y, node4.z,
+            0.0, # Starting value for first parametric direction
+            1.0, # Ending value for first parametric direction
+            0.0, # Starting value for second parametric direction
+            1.0 # Ending value for second parametric direction
+            ])
 
 class IGESTestSplineCurve(IGESItemData):
     def __init__(self):
