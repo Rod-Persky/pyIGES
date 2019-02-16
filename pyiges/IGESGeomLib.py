@@ -542,30 +542,52 @@ class IGESRationalBSplineSurface(IGESItemData):
             1.0 # Ending value for second parametric direction
             ])
 
-class IGESTestSplineCurve(IGESItemData):
-    def __init__(self):
-        IGESItemData.__init__(self)
-        self.EntityType.setLinearPath3D()
-        self.FormNumber = 0
+class IGESSplineCurve(IGESItemData):
+    CTYPE_INDEX = 0
+    H_INDEX = 1
+    NDIM_INDEX = 2
+    N_INDEX = 3
+    BREAKPOINT_START_INDEX = 4
 
-        self.AddParameters([3, 1, 3, 7, 0., 1., 2., 3., 4., 5., 6., 7., 5.817, 0.183686,
-                            7.152560000000000E-007, 0.00391344, 7.42046, 0.116096,
-                            - 1.430510000000000E-006, -0.0365138, 0.582714, 0.26764,
-                            - 2.682210000000000E-007, -0.0384366, 6.0046, 0.195428, 0.011741,
-                            - 0.0231148, 7.50004, 0.00655174, -0.109543, 0.0169944, 0.811917,
-                            0.15233, -0.11531, -0.00673003, 6.18865, 0.149566, -0.0576034,
-                            - 0.034095, 7.41404, -0.161551, -0.0585597, 0.0144959, 0.842207,
-                            - 0.0984805, -0.1355, 0.000767251, 6.24652, -0.0679259, -0.159888,
-                            0.0609804, 7.20843, -0.235182, -0.0150719, 0.0548643, 0.608993,
-                            - 0.367179, -0.133198, 0.11326, 6.07969, -0.204761, 0.0230529,
-                            - 0.00538516, 7.01304, -0.100733, 0.149521, -0.0375805, 0.221876,
-                            - 0.293796, 0.206582, -0.0375974, 5.89259, -0.174811, 0.00689745,
-                            0.041456, 7.02425, 0.0855677, 0.0367796, 0.0150364, 0.0970648,
-                            0.00657602, 0.0937898, 0.0214335, 5.76614, -0.0366479, 0.131266,
-                            - 0.0437549, 7.16163, 0.204236, 0.0818889, -0.0272963, 0.218864,
-                            0.258456, 0.15809, -0.0526968, 5.817, 0.0946183,
-                            1.430510000000000E-006, -0.26253, 7.42046, 0.286125, 0., -0.163778,
-                            0.582714, 0.146546, -1.713630000000000E-007, -0.316181])
+    """IGES Spline curve (Type 112, Form 0). Defines a curve as a series of
+    parametric polinomials.
+
+    :param int stype: Spline Type: 1=Linear, 2=Quadratic, 3=Cubic, 4=Wilson-Fowler, 5=Modified Wilson-Fowler, 6=B-spline
+
+    :param int h: Degree  of  continuity  with  respect  to  arc  length
+
+    :param int ndim: Number  of  dimensions: 2=planar, 3=nonplanar
+    """
+    def __init__(self, stype, h, ndim):
+        IGESItemData.__init__(self)
+        self.EntityType.setLinearPath3D() # 112
+        self.FormNumber = 0
+        self._stype = stype
+        self._h = h
+        self._ndim = ndim
+        self._n = -1 # Number of segments
+        self.AddParameters([self._stype, self._h, self._ndim, self._n])
+        self._breakpoints = list()
+        self._polynomials = list()
+        self._nextBreakpointInsert = IGESSplineCurve.BREAKPOINT_START_INDEX
+
+    def addSegment(self, breakpoint, polynominal):
+        """add segment to spline curve
+
+        :param breakpoint: break point for polinominal
+        :type breakpoint: int or float
+
+        :param polynominal: list of parameters of the polinominal. has to be exactly 12 elements long
+        :type polynominal: list(12) of int or float
+
+        """
+        if len(polynominal) != 12:
+            raise Exception("Invalid data for polynominal")
+
+        self.ParameterData[IGESSplineCurve.N_INDEX] += 1
+        self.ParameterData.insert(self._nextBreakpointInsert, breakpoint)
+        self._nextBreakpointInsert += 1
+        self.ParameterData.extend(polynominal)
 
 
 class IGESTestSplineSurf(IGESItemData):
