@@ -92,10 +92,10 @@ class IGESExtrude(IGESItemData):
 
     :param IGESObject: object wich sould be extruded
 
-    :param length: end point of extrusion
-    :type length: :py:class:`~pyiges.IGESGeomLib.IGESPoint`
+    :param endpoint: end point of extrusion
+    :type endpoint: :py:class:`~pyiges.IGESGeomLib.IGESPoint`
     """
-    def __init__(self, IGESObject, length):
+    def __init__(self, IGESObject, endpoint):
         IGESItemData.__init__(self)
         self.EntityType.setTabulatedCylinder()
 
@@ -108,15 +108,14 @@ class IGESExtrude(IGESItemData):
         if object_type == IGESGeomPolyline:
             startpoint = IGESObject.ParameterData[2:5]
 
-        elif (object_type == IGESGeomCircle or
-              object_type == IGESGeomArc):
+        elif (object_type == IGESGeomCircle or object_type == IGESGeomArc):
             startpoint = IGESObject.ParameterData[3:5]
             startpoint.append(IGESObject.ParameterData[0])
 
         self.AddParameters([IGESObject.DirectoryDataPointer.data,
-                            startpoint[0] + length.x,
-                            startpoint[1] + length.y,
-                            startpoint[2] + length.z])
+                            startpoint[0] + endpoint.x,
+                            startpoint[1] + endpoint.y,
+                            startpoint[2] + endpoint.z])
 
 
 class IGESRevolve(IGESItemData):  # 120
@@ -286,8 +285,8 @@ class IGESGeomCompositeCurve(IGESItemData):
 
     """IGES Composite Curve (Type 102, Form 0). A continuous after grouping stituent  entities  into  a  logical  unit.
 
-    :param *args: List of geometry objects for grouping
-    :type *args: :py:class:`~pyiges.IGESGeomLib.IGESItemData`
+    :param args: List of geometry objects for grouping
+    :type args: :py:class:`~pyiges.IGESGeomLib.IGESItemData`
     """
     def __init__(self, *args):
         IGESItemData.__init__(self)
@@ -559,6 +558,16 @@ class IGESSplineCurve(IGESItemData):
         self.ParameterData.insert(self._nextBreakpointInsert, breakpoint)
         self._nextBreakpointInsert += 1
         self.ParameterData.extend(polynominal)
+
+
+class IGESGeneralNoteEntity(IGESItemData):
+    def __init__(self, parameters, formNumber=0):
+        IGESItemData.__init__(self)
+        self.EntityType.setGeneralNoteEntity() # 212
+        self.FormNumber = formNumber
+        self.LineFontPattern.setSolid()
+        self.AddParameters(parameters)
+
 
 #===============================================================================
 # class IGESCentLinePt(IGESGeomLine):

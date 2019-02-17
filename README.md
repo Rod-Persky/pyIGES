@@ -15,6 +15,11 @@ ensure that it plays nicely with whatever program the IGES files are being impor
 Finally note, IGES in this case is being used for surface modeling - I'm unaware
 of programs that properly support the IGES constructive solid geometry items beyond b-rep geometry.
 
+Sources for further information about the IGES format:
+- `ECLIPSE Foundation Wiki on the IGES file specification <https://wiki.eclipse.org/IGES_file_Specification/>`_
+- `Initial Graphics Exchange Specification 5.3 <http://paulbourke.net/dataformats/iges/IGES.pdf>`_
+- `Guidelines for the CSpecification and Validationof IGES Applicationof IGESA <https://apps.dtic.mil/dtic/tr/fulltext/u2/a261278.pdf>`_
+
 
 Depends On
 ===========

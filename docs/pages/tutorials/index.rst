@@ -11,6 +11,18 @@ Getting Started
 Getting started with pyiges is as simple as doing ``import pyiges``
 
 
+Simple Demos
+----------------
+
+Here are some very simple demo files that show the basic functionality.
+
+.. toctree::
+   :maxdepth: 2
+   :glob:
+
+   ../../examples/demos/demos.rst
+
+
 'Real Examples'
 ----------------
 

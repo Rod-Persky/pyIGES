@@ -75,6 +75,7 @@ class IGESEntityTypeNumber(IGESParameter):
     def setRightCircConSurf(self):     self.value = 194
     def setSphericalSurf(self):        self.value = 196
     def setToroidSurf(self):           self.value = 198
+    def setGeneralNoteEntity(self):    self.value = 212
     def setSubfigureInstance(self):    self.value = 308
     def setDrawingEntity(self):        self.value = 404
     def setPropertyEntity(self):       self.value = 406
