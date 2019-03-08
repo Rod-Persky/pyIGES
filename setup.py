@@ -30,7 +30,7 @@ PY3 = py_version[0] == 3
 if not PY3:
     raise RuntimeError('Python 3.x is required')
 
-with open('README.md') as file:
+with open('README') as file:
     long_description = file.read()
 
 setup(
@@ -89,7 +89,7 @@ setup(
                           #'http://www.lfd.uci.edu/~gohlke/pythonlibs/chxm2uxu'
                           # ],
 
-      include_package_data = True,
+      # include_package_data = True,
 
       # py_modules = ['ez_setup']
 

@@ -5,6 +5,7 @@ pyiges/*/*.igs
 _build
 
 Thumbs.db
+MANIFEST
 
 # C extensions
 *.so

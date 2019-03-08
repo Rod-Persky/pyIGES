@@ -23,6 +23,15 @@ decimal.setcontext(this_context)
 
 
 def format_line(data, section):
+    """concatinate data chuncks and add section marker and line counter
+
+    :param data: list of values
+    :type data: list
+
+    :param section: letter for the corresponding IGES section
+    :type section: string
+
+    """
     out = ""
 
     for i in range(0, len(data)):
@@ -35,14 +44,13 @@ def format_line(data, section):
 
 
 def IGESUnaligned(data, IGESGlobal, section, DirectoryPointer=0):
-    """IGES Unaligned
-    data, IGESGlobal, section, DirectoryPointer
+    """split data into chuncks of correct length for file output
+    Step 1, Convert data
+    Step 2, Check line length is less then IGESGlobal.linelength
+    Step 2a, Add parameter to line
+    Step 2b, Add line to LineStore
+    Step 4, return LineStore sting
     """
-    # Step 1, Convert data
-    # Step 2, Check line length is less then IGESGlobal.linelength
-    # Step 2a, Add parameter to line
-    # Step 2b, Add line to LineStore
-    # Step 4, return LineStore sting
 
     if section == "P":
         LineLength = IGESGlobal.LineLength - 2

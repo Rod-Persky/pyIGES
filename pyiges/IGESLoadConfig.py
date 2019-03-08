@@ -58,7 +58,7 @@ def IGESetKey(object, key, value):  # Otherwise known as reverse tree walk
 
 
 def IGESConfigFromFile(object, filename = 'IGESUserSettings.ini'):
-    """Configure IGES settings from a file"""
+    """Configure IGES settings from a file. Smaple file is provided in the library folder."""
 
     import configparser
     config = configparser.ConfigParser()

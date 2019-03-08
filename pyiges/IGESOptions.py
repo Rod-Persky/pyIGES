@@ -37,12 +37,14 @@ class IGESModelUnits:
     def setCentimeters(self): self.UnitsFlag, self.UnitsName = 10, "CM"
 
 class IGESParameter:
+    """Abstraction class for all parametric values of a iges entity"""
     def __init__(self): self.value = 0
     def __str__(self): return str(self.value)
     def getValue(self): return self.value
 
 
 class IGESEntityTypeNumber(IGESParameter):
+    """Type of geometric entity, should be automaticaly set while constructig the entity"""
     def setCircularArc(self):          self.value = 100
     def setCompositeCurve(self):       self.value = 102
     def setConicArc(self):             self.value = 104
@@ -84,6 +86,7 @@ class IGESEntityTypeNumber(IGESParameter):
 
 
 class IGESLineFontPattern(IGESParameter):
+    """Line font / apperance. Is automaticaly created while constructig the entity"""
     def setNone(self):       self.value = 0
     def setSolid(self):      self.value = 1
     def setDashed(self):     self.value = 2
@@ -93,6 +96,7 @@ class IGESLineFontPattern(IGESParameter):
 
 
 class IGESColorNumber(IGESParameter):
+    """Line color. Is automaticaly created while constructig the entity"""
     def setNone(self):      self.value = 0
     def setBlack(self):     self.value = 1
     def setRed(self):       self.value = 2
@@ -105,11 +109,15 @@ class IGESColorNumber(IGESParameter):
 
 
 class IGESBlankStatus(IGESParameter):
+    """Visibility. Is automaticaly created while constructig the entity.
+    Change by accessing IGESStatusNumber of the entity"""
     def setVisible(self):   self.value = 0
     def setBlanked(self):   self.value = 1
 
 
 class IGESubordinate(IGESParameter):
+    """Dependency of entity. Is automaticaly created while constructig the entity.
+    Change by accessing IGESStatusNumber of the entity"""
     def setIndependent(self):         self.value = 0
     def setPhysicallyDependent(self): self.value = 1
     def setLogicallyDependent(self):  self.value = 2
@@ -117,6 +125,8 @@ class IGESubordinate(IGESParameter):
 
 
 class IGESEntityUseFlag(IGESParameter):
+    """Usage Flag of entity. Is automaticaly created while constructig the entity.
+    Change by accessing IGESStatusNumber of the entity"""
     def setGeometry(self): self.value = 0
     def setAnnotation(self): self.value = 1
     def setDefinition(self): self.value = 2
@@ -127,12 +137,16 @@ class IGESEntityUseFlag(IGESParameter):
 
 
 class IGESHierachy(IGESParameter):
+    """Hierachy Flag of entity. Is automaticaly created while constructig the entity.
+    Change by accessing IGESStatusNumber of the entity"""
     def setGlobalTopDown(self): self.value = 0
     def setGlobalDefer(self): self.value = 1
     def setUseHieracyProperty(self): self.value = 2
 
 
 class IGESStatusNumber:
+    """Collection of the status flags of the entity.
+    Takes care of formated output"""
     def __init__(self):
         self.Visablilty = IGESBlankStatus()
         self.Subordinate = IGESubordinate()

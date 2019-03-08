@@ -1,9 +1,9 @@
                                                                         S      1
-1H,,1H;,17H142-000-example-1,21H142-000-example-1.igs,                  G      1
+1H,,1H;,17H144-000-example-1,21H144-000-example-1.igs,                  G      1
 13H<unspecified>,13H<unspecified>,32,38,6,38,15,                        G      2
-17H142-000-example-1,1.0,2,2HMM,8,0.016,15H20130811.185251,             G      3
-0.0001,71.0,13HRodney Persky,24HQueensland Uni. of Tech.,11,0,          G      4
-15H20130811.185251,1H0;                                                 G      5
+17H144-000-example-1,1,2,2HMM,8,0.016,15H20190126.193748,0.0001,        G      3
+71,13HRodney Persky,24HQueensland Uni. of Tech.,11,0,                   G      4
+15H20190126.193748,1H0;                                                 G      5
      100       1       0       1       0       0       0       000000000D      1
      100       1       0       1       0                                D      2
      108       2       0       0       0       0       0       000000000D      3

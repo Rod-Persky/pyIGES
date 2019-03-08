@@ -110,6 +110,7 @@ class IGESItemData:
                  self.EntityLabel[:8],                   # Item 18
                  self.EntitySubScript]                   # Item 19
 
+        # some entity types require that some values are left out
         if self.EntityType.getValue() == 404: # Drawing Entity
             Line1Template = "{p[0]:>8}{p[1]:>8}{p[8]:>56}"
             Line2Template = "{p[0]:>8}{p[11]:>24}{p[12]:>8}{p[13]:>8}{p[14]:>8}{p[15]:>8}{p[16]:>8}"
