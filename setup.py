@@ -1,17 +1,9 @@
-#!python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-#from distutils.core import setup
-
-try:
-    from setuptools import setup, find_packages
-except ImportError:
-    from ez_setup import use_setuptools
-    use_setuptools()
-    from setuptools import setup, find_packages
-
+from distutils.core import setup
 import sys
 
-DISTUTILS_DEBUG = True
+DISTUTILS_DEBUG = False
 
 if DISTUTILS_DEBUG:
     import urllib.request
@@ -26,7 +18,6 @@ if DISTUTILS_DEBUG:
     version_file = open("pyIGESVersion", 'w')
     version_file.write(version)
     version_file.close()
-
 else:
     version_file = open("pyIGESVersion", 'r')
     version = version_file.read()
@@ -39,14 +30,14 @@ PY3 = py_version[0] == 3
 if not PY3:
     raise RuntimeError('Python 3.x is required')
 
-with open('README.md') as file:
+with open('README') as file:
     long_description = file.read()
 
 setup(
       name = 'pyIGES',
       version = version,  # major.minor.revision
 
-      platforms = ['Linux', 'Windows'],
+      platforms = ['Linux', 'Windows', 'MacOS'],
       url = 'https://github.com/Rod-Persky/pyIGES',
 
       classifiers = [
@@ -60,8 +51,8 @@ setup(
         'License :: OSI Approved :: Academic Free License (AFL)',
 
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.2",
-        "Programming Language :: Python :: 3.3",
+        #"Programming Language :: Python :: 3.2",
+        #"Programming Language :: Python :: 3.3",
 
         'Intended Audience :: End Users/Desktop',
         'Intended Audience :: Developers',
@@ -88,18 +79,18 @@ setup(
 
       packages = ['pyiges'],
       package_dir = {'pyiges': 'pyiges'},
-      zip_safe = True,
+      # zip_safe = True,
 
       # Cannot automatically download from UCI at present due to filtering or some such
-      dependency_links = [#'http://www.lfd.uci.edu/~gohlke/pythonlibs/chxm2uxu/numpy-MKL-1.7.1.win-amd64-py3.3.exe',
+      # dependency_links = [#'http://www.lfd.uci.edu/~gohlke/pythonlibs/chxm2uxu/numpy-MKL-1.7.1.win-amd64-py3.3.exe',
                           #'http://www.lfd.uci.edu/~gohlke/pythonlibs/chxm2uxu/numpy-MKL-1.7.1.win32-py3.3.exe',
                           #'http://www.lfd.uci.edu/~gohlke/pythonlibs/chxm2uxu/scipy-0.12.0.win-amd64-py3.3.exe',
                           #'http://www.lfd.uci.edu/~gohlke/pythonlibs/chxm2uxu/scipy-0.12.0.win32-py3.3.exe'
-                          'http://www.lfd.uci.edu/~gohlke/pythonlibs/chxm2uxu'
-                          ],
+                          #'http://www.lfd.uci.edu/~gohlke/pythonlibs/chxm2uxu'
+                          # ],
 
-      include_package_data = True,
+      # include_package_data = True,
 
-      py_modules = ['ez_setup']
+      # py_modules = ['ez_setup']
 
       )

@@ -1,6 +1,5 @@
-#!python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-#@PydevCodeAnalysisIgnore
 """
 .. module:: IGES.IGESOptions
    :platform: Agnostic, Windows
@@ -38,12 +37,14 @@ class IGESModelUnits:
     def setCentimeters(self): self.UnitsFlag, self.UnitsName = 10, "CM"
 
 class IGESParameter:
+    """Abstraction class for all parametric values of a iges entity"""
     def __init__(self): self.value = 0
     def __str__(self): return str(self.value)
     def getValue(self): return self.value
 
 
 class IGESEntityTypeNumber(IGESParameter):
+    """Type of geometric entity, should be automaticaly set while constructig the entity"""
     def setCircularArc(self):          self.value = 100
     def setCompositeCurve(self):       self.value = 102
     def setConicArc(self):             self.value = 104
@@ -76,20 +77,26 @@ class IGESEntityTypeNumber(IGESParameter):
     def setRightCircConSurf(self):     self.value = 194
     def setSphericalSurf(self):        self.value = 196
     def setToroidSurf(self):           self.value = 198
+    def setGeneralNoteEntity(self):    self.value = 212
     def setSubfigureInstance(self):    self.value = 308
+    def setDrawingEntity(self):        self.value = 404
+    def setPropertyEntity(self):       self.value = 406
+    def setViewEntity(self):           self.value = 410
     def setCircularArray(self):        self.value = 414
 
 
 class IGESLineFontPattern(IGESParameter):
-    def setNone(self):      self.value = 0
-    def setSolid(self):     self.value = 1
-    def setDashed(self):    self.value = 2
-    def setPhantom(self):   self.value = 3
+    """Line font / apperance. Is automaticaly created while constructig the entity"""
+    def setNone(self):       self.value = 0
+    def setSolid(self):      self.value = 1
+    def setDashed(self):     self.value = 2
+    def setPhantom(self):    self.value = 3
     def setCenterline(self): self.value = 4
-    def setDotted(self):    self.value = 5
+    def setDotted(self):     self.value = 5
 
 
 class IGESColorNumber(IGESParameter):
+    """Line color. Is automaticaly created while constructig the entity"""
     def setNone(self):      self.value = 0
     def setBlack(self):     self.value = 1
     def setRed(self):       self.value = 2
@@ -102,18 +109,24 @@ class IGESColorNumber(IGESParameter):
 
 
 class IGESBlankStatus(IGESParameter):
+    """Visibility. Is automaticaly created while constructig the entity.
+    Change by accessing IGESStatusNumber of the entity"""
     def setVisible(self):   self.value = 0
     def setBlanked(self):   self.value = 1
 
 
 class IGESubordinate(IGESParameter):
-    def setIndependent(self): self.value = 0
+    """Dependency of entity. Is automaticaly created while constructig the entity.
+    Change by accessing IGESStatusNumber of the entity"""
+    def setIndependent(self):         self.value = 0
     def setPhysicallyDependent(self): self.value = 1
-    def setLogicallyDependent(self): self.value = 2
-    def setPysANDLogDependent(self): self.value = 3
+    def setLogicallyDependent(self):  self.value = 2
+    def setPysANDLogDependent(self):  self.value = 3
 
 
 class IGESEntityUseFlag(IGESParameter):
+    """Usage Flag of entity. Is automaticaly created while constructig the entity.
+    Change by accessing IGESStatusNumber of the entity"""
     def setGeometry(self): self.value = 0
     def setAnnotation(self): self.value = 1
     def setDefinition(self): self.value = 2
@@ -124,12 +137,16 @@ class IGESEntityUseFlag(IGESParameter):
 
 
 class IGESHierachy(IGESParameter):
+    """Hierachy Flag of entity. Is automaticaly created while constructig the entity.
+    Change by accessing IGESStatusNumber of the entity"""
     def setGlobalTopDown(self): self.value = 0
     def setGlobalDefer(self): self.value = 1
     def setUseHieracyProperty(self): self.value = 2
 
 
 class IGESStatusNumber:
+    """Collection of the status flags of the entity.
+    Takes care of formated output"""
     def __init__(self):
         self.Visablilty = IGESBlankStatus()
         self.Subordinate = IGESubordinate()
@@ -137,4 +154,4 @@ class IGESStatusNumber:
         self.Hierachy = IGESHierachy()
 
     def __str__(self):
-        return "{:0>2}{:0>2}{:0>2}{:0>2}".format(self.Visablilty, self.Subordinate, self.EntityUseFlag, self.Hierachy)
+        return "{:0>2}{:0>2}{:0>2}{:0>2}".format(self.Visablilty.value, self.Subordinate.value, self.EntityUseFlag.value, self.Hierachy.value)

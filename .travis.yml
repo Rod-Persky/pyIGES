@@ -1,12 +1,16 @@
 language: python
 python:
-- 3.2
-- 3.3
-install: sudo apt-get -qq install python3-numpy python3-scipy
+  - "3.4"
+  - "3.5"
+  - "3.6"
+  - "3.7"
+# install: sudo apt-get -qq install python3-numpy python3-scipy
+install:
+  - pip install -r requirements.txt
 script:
-- python setup.py clean
-- python setup.py build_ext --inplace
-- python setup.py install
+  - python setup.py clean
+  - python setup.py build_ext --inplace
+  - python setup.py install
 deploy:
   provider: pypi
   user: Rodney.Persky

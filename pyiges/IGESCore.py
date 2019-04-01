@@ -1,4 +1,4 @@
-#!python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 .. module:: IGES.IGESCore
@@ -34,7 +34,7 @@ class IGESectionFunctions:
         return IGESPointer(self._linecount)
 
     def __str__(self):
-        return IGESCompile.format_line(self._data, self.LetterCode)
+        return IGESCompile.format_line(self._data, self.LetterCode).rstrip()
 
     def AddLines(self, lines):
         self._linecount = self._linecount + len(lines)
@@ -93,10 +93,10 @@ class IGESItemData:
             raise TypeError(inst)
 
     def CompileDirectory(self):
-        items = [str(self.EntityType),                   # Item 1
-                 self.ParameterDataPointer,              # Item 2
+        items = [self.EntityType.getValue(),             # Item 1
+                 self.ParameterDataPointer.data,         # Item 2
                  self.Structure,                         # Item 3
-                 str(self.LineFontPattern),              # Item 4
+                 self.LineFontPattern.getValue(),        # Item 4
                  self.Level,                             # Item 5
                  self.View,                              # Item 6
                  self.TransfrmMat,                       # Item 7
@@ -110,8 +110,19 @@ class IGESItemData:
                  self.EntityLabel[:8],                   # Item 18
                  self.EntitySubScript]                   # Item 19
 
-        Line1Template = "{p[0]:>8}{p[1]:>8}{p[2]:>8}{p[3]:>8}{p[4]:>8}{p[5]:>8}{p[6]:>8}{p[7]:>8}{p[8]:>8}"
-        Line2Template = "{p[0]:>8}{p[9]:>8}{p[10]:>8}{p[11]:>8}{p[12]:>8}{p[13]:>8}{p[14]:>8}{p[15]:>8}{p[16]:>8}"
+        # some entity types require that some values are left out
+        if self.EntityType.getValue() == 404: # Drawing Entity
+            Line1Template = "{p[0]:>8}{p[1]:>8}{p[8]:>56}"
+            Line2Template = "{p[0]:>8}{p[11]:>24}{p[12]:>8}{p[13]:>8}{p[14]:>8}{p[15]:>8}{p[16]:>8}"
+        elif self.EntityType.getValue() == 406: # Property Entity
+            Line1Template = "{p[0]:>8}{p[1]:>8}{p[4]:>24}{p[8]:>32}"
+            Line2Template = "{p[0]:>8}{p[11]:>24}{p[12]:>8}{p[13]:>8}{p[14]:>8}{p[15]:>8}{p[16]:>8}"
+        elif self.EntityType.getValue() == 410: # View Entity
+            Line1Template = "{p[0]:>8}{p[1]:>8}{p[6]:>40}{p[8]:>16}"
+            Line2Template = "{p[0]:>8}{p[11]:>24}{p[12]:>8}{p[13]:>8}{p[14]:>8}{p[15]:>8}{p[16]:>8}"
+        else:
+            Line1Template = "{p[0]:>8}{p[1]:>8}{p[2]:>8}{p[3]:>8}{p[4]:>8}{p[5]:>8}{p[6]:>8}{p[7]:>8}{p[8]:>8}"
+            Line2Template = "{p[0]:>8}{p[9]:>8}{p[10]:>8}{p[11]:>8}{p[12]:>8}{p[13]:>8}{p[14]:>8}{p[15]:>8}{p[16]:>8}"
 
         self.CompiledDirectory = [Line1Template.format(p = items)]
         self.CompiledDirectory.append(Line2Template.format(p = items))
@@ -144,10 +155,13 @@ class IGEStart(IGESectionFunctions):
 
     def __str__(self):
         out = ""
-        for line in range(0, len(self.Prolog)):
-            out = self.Template.format(out, self.Prolog[line][0][:72], line + 1)
-        self._linecount = line + 1
-        return out
+        for i, line in enumerate(self.Prolog):
+            # out = self.Template.format(out, self.Prolog[line][0][:72], line + 1)
+            next = "{0:72}S{1:7}\n".format(line, i + 1)
+            out += next
+            self._linecount += 1
+        self._linecount -= 1
+        return out.rstrip()
 
 
 class IGESGlobal(IGESDateTime, IGESModelUnits, IGESectionFunctions):
@@ -244,7 +258,13 @@ class IGEStorage(IGESTerminate):
     def save(self, filename = 'IGESFile.igs'):
         try:
             myFile = open(filename, 'w')
-            myFile.write(str(self))
+            #myFile.write(str(self))
+            myFile.write(str(self.StartSection))
+            myFile.write(str(self.GlobalSection))
+            myFile.write(str(self.DirectorySection))
+            myFile.write(str(self.ParameterSection))
+            myFile.write(str("\n"))
+            myFile.write(str(self.IGESTerminate()))
             myFile.close()
             print("\n\nSuccessfuly wrote:", filename)
         except:
@@ -252,9 +272,9 @@ class IGEStorage(IGESTerminate):
 
     def __str__(self):
         out = str(self.StartSection)
-        out = "".join([out, str(self.GlobalSection), ""])
-        out = "".join([out, str(self.DirectorySection), ""])
-        out = "".join([out, str(self.ParameterSection), "\n"])
+        out = "".join([out, str(self.GlobalSection)])
+        out = "".join([out, str(self.DirectorySection)])
+        out = "".join([out, str(self.ParameterSection)])
         out = "".join([out, self.IGESTerminate()])
         return out
 
