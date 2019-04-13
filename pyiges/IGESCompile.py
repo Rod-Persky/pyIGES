@@ -93,7 +93,12 @@ def IGESUnaligned(data, IGESGlobal, section, DirectoryPointer=0):
             lines.append(Parameter)
 
         else:
-            raise NotImplementedError("Character by character wrapping not implimented, you must shorten", Parameter)
+            # Parameter does not in one line so it has to be split into multible lines
+            remaining_space = 71 - len(lines[nline])
+            lines[nline] = "{0}{delim}{1}".format(lines[nline], Parameter[:remaining_space], delim=IGESGlobal.ParameterDelimiterCharacter)
+            Parameter = Parameter[remaining_space:]
+            chunks = len(Parameter)
+            lines.extend([Parameter[i:i+71] for i in range(0, chunks, 71)])
 
     lines[len(lines) - 1] = "{}{}".format(lines[len(lines) - 1], IGESGlobal.RecordDelimiter)
 
