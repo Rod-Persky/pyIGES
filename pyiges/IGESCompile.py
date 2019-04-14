@@ -65,11 +65,11 @@ def IGESUnaligned(data, IGESGlobal, section, DirectoryPointer=0):
     for item in data:
         nline = len(lines) - 1
         itemType = type(item)
-        if itemType == str:
+        if itemType is str:
             Parameter = "{}H{}".format(len(item), item)
-        elif itemType == int:
+        elif itemType is int:
             Parameter = "{}".format(item)
-        elif itemType == float:
+        elif itemType is float:
             Parameter = "{}".format(decimal.Decimal(item).normalize())
             # Parameter = "{}".format(numpy.around(item, 5))
         elif 'numpy.float64' in str(itemType):
@@ -78,29 +78,30 @@ def IGESUnaligned(data, IGESGlobal, section, DirectoryPointer=0):
         else:
             raise NotImplementedError("Unable to convert type ", str(itemType))
 
+        current_line_length = len(lines[nline])
         # See if we can fit this parameter on the line
-        if len(lines[nline]) == 0:
+        if current_line_length == 0:
             # If we're on the first item for the line
             lines[nline] = Parameter
 
-        elif len(lines[nline]) + len(Parameter) + 1 < LineLength:
+        elif current_line_length + len(Parameter) + 1 < LineLength:
             # We can fit the Parameter on this line with a trailing comma
-            lines[nline] = "{0}{delim}{1}".format(lines[nline], Parameter, delim=IGESGlobal.ParameterDelimiterCharacter)
+            lines[nline] += IGESGlobal.ParameterDelimiterCharacter + Parameter
 
         elif len(Parameter) < LineLength - (len(Parameter) + 1):
             # We could not fit the Parameter on this line but we can fit the parameter on the next line
-            lines[nline] = "{0}{delim}".format(lines[nline], delim=IGESGlobal.ParameterDelimiterCharacter)
+            lines[nline] += IGESGlobal.ParameterDelimiterCharacter
             lines.append(Parameter)
 
         else:
             # Parameter does not in one line so it has to be split into multible lines
-            remaining_space = 71 - len(lines[nline])
-            lines[nline] = "{0}{delim}{1}".format(lines[nline], Parameter[:remaining_space], delim=IGESGlobal.ParameterDelimiterCharacter)
+            remaining_space = IGESGlobal.LineLength - current_line_length
+            lines[nline] += IGESGlobal.ParameterDelimiterCharacter + Parameter[:remaining_space]
             Parameter = Parameter[remaining_space:]
             chunks = len(Parameter)
-            lines.extend([Parameter[i:i+71] for i in range(0, chunks, 71)])
+            lines.extend([Parameter[i:i+IGESGlobal.LineLength] for i in range(0, chunks, IGESGlobal.LineLength)])
 
-    lines[len(lines) - 1] = "{}{}".format(lines[len(lines) - 1], IGESGlobal.RecordDelimiter)
+    lines[-1] += IGESGlobal.RecordDelimiter
 
     if section == "P":
         # in the parameter section we need to add a pointer back to the directory on every line

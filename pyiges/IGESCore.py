@@ -289,10 +289,10 @@ class IGEStorage(IGESTerminate):
 
     def __str__(self):
         out = str(self.StartSection)
-        out = "".join([out, str(self.GlobalSection)])
-        out = "".join([out, str(self.DirectorySection)])
-        out = "".join([out, str(self.ParameterSection)])
-        out = "".join([out, self.IGESTerminate()])
+        out += str(self.GlobalSection)
+        out += str(self.DirectorySection)
+        out += str(self.ParameterSection)
+        out += self.IGESTerminate()
         return out
 
 if __name__ == "__main__":
