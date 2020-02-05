@@ -32,23 +32,22 @@ def IGESetKey(object, key, value):  # Otherwise known as reverse tree walk
             if 1 < len(IGESKey):
                 IGESetKey(object.__dict__[IGESKey[0]], IGESKey[1:][0], value)
             else:
-                if type(object.__dict__[IGESKey[0]]) == list:
+                if isinstance(object.__dict__[IGESKey[0]], list):
                     # Because multline items are assumed to always be parameters, we
                     #  need to convert this to format [[line1],[line2],...[lineN],]
-
                     IGESItem = list()
 
                     for line in value.split("\n"):
                             IGESItem.append([line])
 
                     object.__dict__[IGESKey[0]] = IGESItem
-                elif type(object.__dict__[IGESKey[0]]) == str:
+                elif isinstance(object.__dict__[IGESKey[0]], str):
                     object.__dict__[IGESKey[0]] = value
                 elif 8 < len(value):
                     raise ResourceWarning(''.join((key, " (", value, ") cannot have a length longer than 8 characters")))
-                elif type(object.__dict__[IGESKey[0]]) == int:
+                elif isinstance(object.__dict__[IGESKey[0]], int):
                     object.__dict__[IGESKey[0]] = int(value)  # We assume that the hard coded types are correct!
-                elif type(object.__dict__[IGESKey[0]]) == float:
+                elif isinstance(object.__dict__[IGESKey[0]], float):
                     object.__dict__[IGESKey[0]] = float(value)
                 else:
                     raise NotImplementedError(''.join((value, " connects to an unhandled type: ",

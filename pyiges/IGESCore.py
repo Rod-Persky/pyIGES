@@ -155,14 +155,29 @@ class IGEStart(IGESectionFunctions):
 
     def __str__(self):
         out = ""
+
+        if isinstance(self.Prolog, str):
+            self.Prolog = self._string_to_lists(self.Prolog)
+        elif isinstance(self.Prolog, list):
+            temp_list = list()
+            for prolog_element in self.Prolog:
+                if isinstance(prolog_element, list):
+                    for sub_element in prolog_element:
+                        temp_list.extend(self._string_to_lists(sub_element))
+                else:
+                    temp_list.extend(self._string_to_lists(sub_element))
+            self.Prolog = temp_list
+
         for i, line in enumerate(self.Prolog):
-            # out = self.Template.format(out, self.Prolog[line][0][:72], line + 1)
             next = "{0:72}S{1:7}\n".format(line, i + 1)
             out += next
             self._linecount += 1
         self._linecount -= 1
         return out.rstrip()
 
+    def _string_to_lists(self, string, length=72):
+        chunks = len(string)
+        return [string[i:i+length] for i in range(0, chunks, length)]
 
 class IGESGlobal(IGESDateTime, IGESModelUnits, IGESectionFunctions):
     LetterCode = "G"
@@ -266,16 +281,18 @@ class IGEStorage(IGESTerminate):
             myFile.write(str("\n"))
             myFile.write(str(self.IGESTerminate()))
             myFile.close()
-            print("\n\nSuccessfuly wrote:", filename)
-        except:
-            print("File write error")
+            print("Successfuly wrote:", filename)
+        except Exception as e:
+            import traceback
+            tb = traceback.format_exc()
+            print("File write error", e, tb)
 
     def __str__(self):
         out = str(self.StartSection)
-        out = "".join([out, str(self.GlobalSection)])
-        out = "".join([out, str(self.DirectorySection)])
-        out = "".join([out, str(self.ParameterSection)])
-        out = "".join([out, self.IGESTerminate()])
+        out += str(self.GlobalSection)
+        out += str(self.DirectorySection)
+        out += str(self.ParameterSection)
+        out += self.IGESTerminate()
         return out
 
 if __name__ == "__main__":
